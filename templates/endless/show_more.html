@@ -1,0 +1,8 @@
+{% load static %}
+{% if querystring %}
+    <div class="endless_container">
+        <a class="endless_more" href="{{ path }}{{ querystring }}"
+            rel="{{ querystring_key }}">{% if label %}{{ label }}{% else %}View more{% endif %}</a>
+        <div class="endless_loading" style="display: none;"><img class="imgLoading" src="{% static 'img/loading.gif'%}" alt=" "/></div>
+    </div>
+{% endif %}

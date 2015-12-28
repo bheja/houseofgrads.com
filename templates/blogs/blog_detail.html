@@ -1,0 +1,134 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% load comments %}
+{% load humanize %}
+{% load phileo_tags %}
+{% block metaData %}
+<meta name="description" content="{% autoescape off%}{{object.content}}{% endautoescape %}"/>
+{% endblock %}
+{% block title%}{{object.title}}{% endblock %}
+{% block postArea %}
+ <div>
+     <div class="blogItemWrapper clearfix">
+                    <div class="blogHeading">
+                        <h3 style="margin-bottom:10px;margin-top:0px;">{{object.title}}</h3>
+                        <span>by</span><span style="margin-left:5px;"><a target="_blank" class="colorBlue" href="{{object.author.get_absolute_url}}" ><b>{{object.author.username}}</b></a></span>
+                        <span>in</span><span class="label label-primary" style="margin-left:5px;font-size:11px;" ><a href="{{object.tag.get_absolute_url}}" style="color:#fff;">{{object.tag.tag}}</a></span>
+                        <span class=""> · {{object.date}}</span><span> · </span>
+                        <a href="javascript:void(0);" class=" deleteBlogLink colorGrey" data-content="<a href='javascript:void(0);' onclick = 'delete_blog({{object.id}},this)' class='deleteItem colorGrey'>Delete</a>">
+                Delete</a>
+                    </div>
+                    <div class="blogPic marginT">
+                        {% if object.cover_image %}
+                       <img class="blogItemPic" src="{{object.cover_image.url}}"/>
+                        {%endif %}
+                    </div>
+                       <div id="blogContent" class="blogContent largeFont marginT">
+                           <p class="largeFont" class="blogText">{% autoescape off %}{{object.blog_content}}{% endautoescape %}</p>
+                       </div>
+
+                    <div class="clearfix"></div>
+                    <div class="commentBox" style="margin-left:0;padding:7px;">
+		 	        <div class="postStatBox clearfix">
+			        {% if user.is_authenticated %}{% phileo_widget user object %}{% else %}
+
+			<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Like">
+			<span class="glyphicon glyphicon-thumbs-up largeFont " title="Like"></span><span class="likeNum">Like</span></a>
+			<a class="btn btn-default smallFont ajax marginL" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);"  onclick="logch(event);" title="share">
+			<span class="glyphicon glyphicon-share-alt largeFont " title="Share"></span><span class="likeNum">Share</span></a>
+			<div class="clearfix"></div>
+			<span class="likeTxt">{{object|likes_count}} people liked this</span>
+                        {% endif %}
+                    </div>
+                        {% if user.is_authenticated %}
+				{% get_comment_form for blogs.blog object.id as comm_form %}
+				{{ comm_form.content_type }}
+				{{ comm_form.object_pk }}
+				{{ comm_form.timestamp }}
+				{{ comm_form.security_hash }}
+				<input type="hidden" value='{{ csrf_token }}'id='id_csrf' />
+				{% endif %}
+				{% get_comment_count for blogs.blog object.id as count %}
+
+						{% get_comment_list for blogs.blog object.id as comment_list %}
+							<div class="parentCommentList">
+
+							<hr>
+							{% for comment in comment_list %}
+
+									<div class="commentList clearfix">
+
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.mugshot }}" class="commentMugshot"/></a>
+									</div>
+
+									<div class="commentBody">
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt" id="commentTxt{{forloop.counter}}">{% autoescape off %}{{ comment.comment}}{% endautoescape %}</span></span>
+									</div>
+
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% if user.is_authenticated %}{% phileo_widget_brief request.user comment %}
+
+										{% else %}
+										<span class="phileoComment">
+										<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Good one">
+										<span class="glyphicon glyphicon-circle-arrow-up" style="font-size:12px;" title="Like"><span class="commentLikeCount">{% if comment|likes_count != 0 %}{{comment|likes_count}}{% endif %}</span></span></a>
+										</span>
+										{% endif %}
+                                        <span> · </span>{% if comment.user == request.user or action.target.author == request.user or action.action_object.author == request.user %}
+                                        <a href="javascript:void(0);" class="deleteCommentLink colorGrey">Delete</a>
+                                        {% else %}
+                                        <a href="javascript:void(0);" class="reportCommentLink colorGrey">Report</a>{% endif %}
+									</div>
+
+									</div>
+
+							{% endfor %}
+							</div>
+
+							<div class="commentForm clearfix input-group-sm marginT">
+							<textarea id = "id_blog_comment" onfocus="tinyMCEblogcomm();" class="commentArea form-control noResize"  placeholder="Write a comment..." required></textarea>
+							<div class="clearfix"></div>
+							<div class="btn-group btn-group-sm floatR marginT hiding">
+							<button type="submit"  class=" commentSubmit btn btn-default" {% if user.is_active %}onclick="postComm(this);"{%else%}onclick="actch(event);"{%endif%}>
+							<b>Comment</b></button>
+							</div>
+							<input type="hidden" value="" class="tagElement"/>
+							</div>
+
+                   </div>
+                </div>
+ </div>
+{% endblock %}
+{% block newsFeed %}
+
+{% endblock %}
+ {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+{% block js %}
+        <script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+        <script type="text/javascript">
+window.onload = function(){blog_details_init();}
+            var stickyTop = $('#sideMenu').offset().top; // returns number
+
+	$(window).scroll(function(){ // scroll event
+
+    var windowTop = $(window).scrollTop(); // returns number
+
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+
+	}
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+
+    }
+  });
+  $('.deleteBlogLink').popover({html:true,placement:'bottom'});
+        </script>
+{% endblock %}

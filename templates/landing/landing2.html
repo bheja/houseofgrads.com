@@ -1,0 +1,201 @@
+{% extends "base/nav.html" %}
+{% load static %}
+{% load comments %}
+{% load activity_tags %}
+{% load url from future %}
+{% block title%}My feed{% endblock %}
+{% block bodyContent %}
+<div class="container" >
+<div class="col-lg-2 " id="sideMenu" style="padding:0;">
+{% if user.is_authenticated %}
+	<div class="list-group bs-sidebar affix-top" style="font-size:13px;">
+		<a href="/home/" id="sp1" class="list-group-item" >My live feed</a>
+		<a href="/following/threads/" id="sp3" class="list-group-item">Discussions followed</a>
+		<a href="{{user.get_absolute_url}}" id="sp4" class="list-group-item" onclick="panelClick(this,{{user.get_absolute_url}},'4');">My profile</a>
+	    <a id="sp2" data-toggle="collapse" href="#recentVisitedSection" class="list-group-item" disabled>Recently visited discussions</a>
+        <div id="recentVisitedSection" class="panel-collapse collapse bs-sidebar list-group">
+        <span disabled class="list-group-item" style="color:#aaa;">You have not visited any discussions or cookies are disabled on your browser</span>
+		</div>
+    </div>
+	{% else %}
+	<div class="list-group bs-sidebar affix-top">
+	<div class="panel panel-info">
+	<div class="panel-heading"><h5 style="margin:0;">Login</h5></div>
+	<div class="panel-body">
+        <a href="{% url 'social:begin' 'facebook' %}?key=true" class="facebook_button btn btn-sm "><span class="colorWhite">Login with facebook</span></a>
+	<p id="errMsg2"></p>
+	 <form class="form-signin marginT" action="/" id="loginForm2" method="post">
+		<div id="ajaxwrapper2">
+		{% csrf_token %}
+		<label for>Please type in your email or nick</label>
+		<div class="clearfix"></div>
+		<input type="text" class="form-control" name="username" placeholder="Email or nick.."/>
+		<div class="clearfix"></div>
+		<label class="marginT" for>Password</label>
+        <div class="clearfix"></div>
+		<input type="password" name="password" class="form-control" placeholder="Password.."/>
+        <div class="" id="sendwrapper2">
+		<button class="btn marginT btn-sm btn-primary" type="submit" id="loginButton2">Sign in</button>
+		</div>
+		
+      </div>
+	  </form>
+	  </div>
+	</div>
+	</div>
+{% endif %}
+</div>
+<div class="col-lg-8">
+	{% block postArea %}
+	<div class="">
+		<div class=""><input type="hidden" id="tagHidden" value=""/>
+        <input type="hidden" id="tokenMiddle" value="{{csrf_token}}"/>
+        </div>
+		<form class="" action="" id="postForm" method="post">
+		{% csrf_token %}
+		
+		<div class="postArea">
+		<textarea id="text" class="form-control" name='content' placeholder="Post a question or topic and start discussing...." spellcheck="false"></textarea>
+		{{ post_form.author }}
+		{{ post_form.date }}
+		{{ post_form.thread }}
+		<input type="hidden" id="img_url" value=""/>
+		<div class="liveContainer"></div>
+		</div>
+		<div class="postPanel clearfix">
+		<div id="file-uploader" class="floatL" style="height:28px;"></div>
+			<div class="btn-group btn-group-sm floatR">
+				
+				<button type="submit" id="submitPost" class="btn btn-primary" {% if user.is_active %}{%else%}onclick="actch(event);"{%endif%}>
+				
+				<b>Post</b></button>
+			</div>
+			<img src="{% static 'img/loading.gif' %}" class="loading hiding floatR marginT marginR"/>
+			<span class="glyphicon glyphicon-remove hiding colorGrey floatR pointer" title="close preview"></span>	
+		
+		</div>
+		<div class ="uploadedFilePanel">
+		
+		</div>
+		</form>
+	</div>
+	{% endblock %}
+	{% block newsFeed %}
+	<div id="newsFeed" class="newsFeed">
+	   {% include 'feed/feed_paginate.html' %}
+	</div>
+	{% endblock %}
+</div>
+<div class="col-lg-2">
+<input type="hidden" id="actch123" value="{{user.is_active}}"/>
+	<input type="hidden" id="logch123" value="{{user.is_authenticated}}"/>
+
+	{% if user.is_authenticated %}
+    <div class="list-group bs-sidebar affix-top">
+	<button data-toggle="modal" data-target="#checkThreadModal" class="btn btn-default btn-thread colorGrey" id="createThreadButton" {% if user.is_active %}onclick="backonthread();"{%else%}onclick="actch(event);"{%endif%}>Create a thread</button>
+	<button data-toggle="modal" data-target="#messageCompose" class="btn btn-default btn-thread marginT colorGrey" id="messageComposeButton" {% if user.is_active %}{%else%}onclick="actch(event);"{%endif%}>Send a Message</button>
+    <button class="btn btn-default btn-thread marginT colorGrey" id="feedbackBtn" onclick="parent.location='/houseofgrads/feedback/'">Report a bug</button>
+    </div>
+	{% else %}
+	<div class="list-group bs-sidebar affix-top registrationWrapper">
+	<div class="panel panel-info">
+	<div class="panel-heading"><h5 style="margin:0;">Sign up</h5></div>
+	<div class="panel-body">
+	<p id="errMsg4"></p>
+	<form class="form-signin" name="registration_form2" id= "registrationForm2" action="/" method="post">{% csrf_token %}
+					<div class="clearfix">
+					<label for>Email:</label>
+					<input type="text" class="form-control" autofocus placeholder="Email" name="email">
+					</div>
+					<div class="clearfix marginT" style="">
+					<label for>Password:</label>
+					<input type="password" class="form-control" placeholder="Password" name="password1" id="passwordpage1">
+					</div>
+					<div class="clearfix marginT" style="">
+					<label for>Confirm password:</label>
+					<input type="password" class="form-control" placeholder="Confirm password" name="password2"></div>
+					<button class="btn btn-primary btn-sm marginT" id = "signupButton2" type="submit">Register me</button>
+					
+	</form>
+	</div>
+    {% endif %}
+    </div>
+    </div>
+</div>
+</div>
+{% include 'threads/createthread.html' %}
+{% include 'threads/checkthreads.html' %}
+{% include 'conversation/conversation_modal.html' %}
+{% include 'phileo/like_list.html' %}
+{% include 'posts/image_modal.html' %}
+
+{% include 'registration/inActiveModal.html' %}
+{% block footer %}
+ {% endblock %}
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'js/urlive2.js' %}"></script>
+<script type ="text/javascript" src="{% static 'js/fileuploader.js' %}"></script>
+<script type="text/javascript">
+checkHistory('recentVisitedSection');
+$("#id_author").attr('value','{{user.id}}');
+$('#id_thread').attr('value','1');
+window.onload = function(){tinyMCEinit(false);highlightpanel(document.URL,'{{user.username}}');getFeedMain();};
+	var stickyTop = $('#sideMenu').offset().top; // returns number 
+ 
+	$(window).scroll(function(){ // scroll event  
+ 
+    var windowTop = $(window).scrollTop(); // returns number
+ 
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+	
+	}
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+	  
+    } 
+  });
+
+$('.postPanel .glyphicon-remove').tooltip();
+$('.postPanel .glyphicon-remove').click(function(){
+$('.postArea .urlive-link').fadeOut();
+$(this).hide();
+setTimeout("$('.liveContainer').empty();",300);
+});
+
+ var uploader = new qq.FileUploader( {
+            action: "/upload/image/",
+			allowedExtensions: ['png','jpeg','jpg','gif','ico','bmp'],
+            element: $('#file-uploader')[0],
+			listElement: $('.uploadedFilePanel')[0],
+            multiple: true,
+            onComplete: function( id, fileName, responseJSON ) {
+              if( responseJSON.success )
+              {
+              file_name = fileName + "jPeFhhi"
+              $('.uploadedFilePanel').append('<input type="hidden" value="'+responseJSON.path+'" id="'+file_name+'">')
+			  }else{}},
+            onAllComplete: function( uploads ) {
+            $('#img_url').val('');
+			  for(i=0;i<uploads.length;i++){
+			  $('#img_url').val($('#img_url').val() + ' ' + uploads[i]['response']['path']);
+			  }
+
+			  },
+            params: {
+              'csrf_token': '{{ csrf_token }}',
+              'csrf_name': 'csrfmiddlewaretoken',
+              'csrf_xname': 'X-CSRFToken',
+            },
+          }) ;
+$('.qq-upload-button').tooltip();
+
+</script>
+{% endblock %}

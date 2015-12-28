@@ -1,0 +1,21 @@
+
+<div class="phileo floatL">
+ {% if can_like %}
+<a class="{% if liked %} btn btn-default smallFont ajax bgGreen {% else %}btn btn-default smallFont ajax{% endif %}" href="{{ like_url }}" data-method="post" data-replace-closest=".phileo" data-spinner="off" onmouseover="showtooltipfeed(this);" 
+onmouseover="hidetooltipfeed(this);" title="Like">
+			<span class="glyphicon glyphicon-thumbs-up largeFont " title="Like"></span><span class="likeNum">Like</span></a>
+			<a class="btn btn-default smallFont ajax marginL" href="#" data-toggle='modal' data-target="#shareModal" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);"  onclick="share(this);" title="share">
+			<span class="glyphicon glyphicon-share-alt largeFont " title="Share"></span><span class="likeNum">Share</span></a>
+<div class="clearfix"></div>
+{% if like_count != 0 %}
+	{% if like_count == 1 %}
+	<span class="likeTxt">{% if liked %}You liked this{% else %}<a href="javascript:void(0);" onclick="likeList(this)" data-toggle="modal" data-target="#likeList">{{like_count}} people</a> liked this {% endif %}</span>
+	{% elif like_count == 2 %}
+	<span class="likeTxt">{% if liked %}You and <a href="javascript:void(0);" onclick="likeList(this)" data-toggle="modal" data-target="#likeList">1 other</a> liked this{% else %}<a href="javascript:void(0);" onclick="likeList(this)" data-toggle="modal" data-target="#likeList">{{like_count}} people</a> liked this {% endif %}</span>
+	{% else %}
+<span class="likeTxt">{% if liked %}You and <a href="javascript:void(0);" onclick="likeList(this)" data-toggle="modal" data-target="#likeList">{{like_count|add:"-1"}} others</a> liked this{% else %}<a href="javascript:void(0);" onclick="likeList(this)" data-toggle="modal" data-target="#likeList">{{like_count}} people</a> liked this {% endif %}</span>
+{% endif %}
+{% endif %}	
+{% endif %}
+	</div>
+	

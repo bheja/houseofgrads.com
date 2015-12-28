@@ -1,0 +1,10 @@
+
+{% load activity_tags %}
+{% for u in user_list %}
+    <div class="row clearfix likeListRow">
+	<div class="floatL" ><a href="{{u.get_absolute_url}}"><img class="mugshotpic" src="{{ u.get_profile.mugshot }}" alt=""/></a></div>
+	<a href="{{u.get_absolute_url}}" class="floatL marginL"><b>{{ u.username }}</b></a>
+	<button id = "followBtn" class="{% if user|is_following:u %}btn btn-primary greenBg floatR{% else %}btn btn-primary floatR{% endif %}">{% if user|is_following:u %}Unfollow{% else %}follow{%endif%}</button>
+	<input type="hidden" name = "like_sender" value="{{u.username}}"/>
+	</div>
+{% endfor %}

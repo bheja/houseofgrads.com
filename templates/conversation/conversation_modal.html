@@ -1,0 +1,26 @@
+{% load static %}
+<div id="messageCompose" class="modal fade" tabindex="-1" aria-hidden="true">
+			<div class="modal-content loginModalSizing customThreadModalSize">
+			<div class="bgDark">
+			<button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+			<h4 class="fontColor">Send a message</h4>
+			</div>
+			<div class="modal-body" id="convFormDiv">
+				<form class="" action="/messages/create/" id="messageForm" method="post">{% csrf_token %}
+				<p class="marginT"><b>To</b></p>
+				<input type= "text" class="form-control" id="recipient_list" name="recipients" placeholder="Start typing nick of recipients.."/>
+                 <div id="messageRecipientDiv"></div>
+				<div class="clearfix"></div>
+				<p class="marginT"><b>Message</b></p>
+				<div class="threadDesArea">
+				<textarea id="textAreaMsg" style="border:1px solid #ddd;outline:1px;" class="form-control" name='text' placeholder="Say Hello!.." autofocus="none"></textarea>
+				</div>
+				<div class="postPanel row clearfix">
+				<div class="btn-group btn-group-sm floatR">
+				<button type="submit" id="submitMsg" class="btn btn-primary"><b>Send</b></button>
+				</div>
+				</div>
+			</form>
+			</div>
+			</div>
+</div>

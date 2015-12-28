@@ -1,0 +1,32 @@
+{% load static %}
+{% load humanize %}
+{% load endless %}
+{% load activity_tags %}
+{% paginate thread_list %}
+
+	<div class="panel panel-default">
+
+		{% for thread in thread_list %}
+
+            <div class="panel-body">
+			<div class="marginT clearfix ">
+			<div style="width:87%;" class="floatL">
+			<a class="colorBlue largeFont" target="_blank" href="{{thread.get_absolute_url}}">{{thread.name|truncatechars:100 }}</a>
+			<span class="marginL smallFont colorGrey"><span class="glyphicon glyphicon-user" style="margin-right:5px;color:#aaa;"></span>{{thread.no_followers.1}} followers</span>
+			<div class="clearfix"></div>
+			<span class="threadBrief" id="threadBrief{{forloop.counter}}{% show_current_number %}">{% autoescape off %}{{thread.brief|truncatechars:200}}{% endautoescape %}</span>
+			</div>
+			<div style="width:13%;" class="floatL">
+			<button id="{{thread.id}}" class="btn {% if user|is_following:thread %}btn-default{% else %}btn-success{%endif%} floatR followingThread">
+			{% if user|is_following:thread %}Unfollow{% else %}Follow{% endif %}</button></div>
+			</div>
+            </div>
+                <script type="text/javascript">
+                var a = document.getElementById('threadBrief{{forloop.counter}}{% show_current_number %}');
+                var b = (a.innerText || a.textContent).substring(0,200)+'...';
+                a.innerHTML = b;
+</script>
+        {% endfor %}
+	</div>
+
+{%show_pages%}

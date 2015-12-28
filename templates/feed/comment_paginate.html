@@ -1,0 +1,28 @@
+{% load static %}
+{% load phileo_tags %}
+{% load endless %}
+{% lazy_paginate comments %}
+{% load humanize %}
+{% show_more "View previous comments"%}
+{% for comment in comments reversed %}
+
+				<div class="commentList clearfix">
+				<div class="commentUser">
+					<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.mugshot }}" class="commentMugshot"/></a>
+				</div>
+				<div class="commentBody">
+					<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+					<span class="commentTxt" id="commentbackTxt{{forloop.counter}}{% show_current_number %}{{post_id}}">{% autoescape off %} {{ comment.comment}} {% endautoescape %}</span></span>
+
+
+				</div>
+				<div class="commentTimestamp">
+						<span class="timestampText">{{comment.submit_date|naturaltime}}</span>
+						{% phileo_widget_brief request.user comment %}
+                    <span> · </span>{% if comment.user == request.user or action.target.author == request.user or action.action_object.author == request.user %}
+                                        <a href="javascript:void(0);" class="deleteCommentLink colorGrey">Delete</a>
+                                        {% else %}
+                                        <a href="javascript:void(0);" class="reportCommentLink colorGrey">Report</a>{% endif %}
+				</div>
+				</div>
+			{% endfor %}

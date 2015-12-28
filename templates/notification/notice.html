@@ -1,0 +1,51 @@
+{% load url from future %}
+{% load static %}
+{% load humanize %}
+{% load phileo_tags %}
+{% load endless %}
+{% lazy_paginate notification_list %}
+{% for notice in notification_list %}
+<li style="font-size:12px; cursor:pointer;" class=" {% if notice.unread %}clearfix unread {% else %}clearfix{% endif %}" onclick="{% if notice.verb|stringformat:'s' != 'has started following you'  %}
+{% if notice.verb|stringformat:'s' == 'liked your comment' %}parent.location = '/postdetail/{{notice.action_object.pk}}/'{% else %}parent.location='/postdetail/{{notice.action_object.id}}/'{% endif %}{% else %}parent.location='/{{notice.actor.username}}/'{% endif %}">
+<div class="row notificationMenuRow clearfix">
+<div>
+<img class="commentMugshot" src="{{ notice.actor.get_profile.mugshot }}" alt=""/></div>
+<div>
+   <b>{{ notice.actor }} 
+   {%if notice.verb|stringformat:"s" == "commented on your post" %}
+		{% if notice.description|stringformat:"s" == '0' %}
+		{% else %}
+			and {{notice.description}} others
+		{% endif %}
+	{% else %}
+		{% if notice.action_object|likes_count = 2 %}
+			and 1 other
+		{% elif notice.action_object|likes_count >= 3 %}
+			 and {{notice.action_object|likes_count|add:"-1"}} others
+		{% endif %}
+	{% endif %}
+			</b>
+    <span>{{ notice.verb }} </span>
+	{% if notice.action_object or notice.target %}
+	<span class="notifySnap" id="notifySnap{{forloop.counter}}{% show_current_number %}">:
+	{% if notice.target %}
+	"{{notice.target.comment|truncatechars:30}}"
+	{% else %}
+	{% if notice.action_object.comment%}"{{notice.action_object.comment|truncatechars:30}}"{%else%}"{{notice.action_object.content|truncatechars:30}}"{%endif%}
+	{% endif%}
+	</span>
+	{% endif %}
+	<div>
+		<span class="timestampText">{{ notice.timestamp|naturaltime }}</span>
+	</div>
+ </div>
+</div>
+ </li>
+       <script type="text/javascript">
+                var a = document.getElementById('notifySnap{{forloop.counter}}{% show_current_number %}');
+                if (a === null){}else{
+                var b = a.innerText || a.textContent;
+                a.innerHTML = b;}
+</script>
+ {% endfor %}
+ {% show_more %}

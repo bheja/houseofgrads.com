@@ -1,0 +1,19 @@
+{% load activity_tags static %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+			<ul class="action-list">
+				{% for action in action_list %}
+					<li>
+						{{action.actor}}
+						<span>{{action.verb}}</span>
+						<span>on</span>
+						{% if action.target != myWall %}
+						<a><span>{{ action.target }}</span></a>
+						{% endif %}
+						<span id="you{{forloop.counter}}"></span>
+						<script type="text/javascript">
+						var a = $("#you{{forloop.counter}}").html('{{action.data.brief}}').text();
+						$("#you{{forloop.counter}}").html(a);
+						</script>
+						</li>
+				{% endfor %}
+			</ul>

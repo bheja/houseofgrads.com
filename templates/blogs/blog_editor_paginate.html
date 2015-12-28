@@ -1,0 +1,49 @@
+{% load static %}
+{% load humanize %}
+{% load endless %}
+{% load phileo_tags %}
+{% load comments %}
+{% paginate blogs_picks %}
+       {% for b in blogs_picks %}
+
+                <div class="blogItemWrapper clearfix">
+                    <div class="blogHeading">
+                        <h4 style="margin-bottom:10px;"><a href="{{b.get_absolute_url}}">{{b.title}}</a></h4>
+                        <span>by</span><span style="margin-left:5px;"><a target="_blank" class="colorBlue" href="{{b.author.get_absolute_url}}" ><b>{{b.author.username}}</b></a></span>
+                       <span>in</span><span class="label label-primary" style="margin-left:5px;font-size:11px;" ><a href="{{b.tag.get_absolute_url}}" style="color:#fff;">{{b.tag.tag}}</a></span>
+                        <span class=""> · {{b.date}}</span>
+                    </div>
+                    <div class="blogPic marginT">
+                        {% if b.cover_image %}
+                       <a href="{{b.get_absolute_url}}"><img class="blogItemPic" src="{{b.cover_image.url}}"/></a>
+                        {%else%}
+                        <p class="largeFont blogContent wordBreak" id="blogEdSnap{{forloop.counter}}{% show_current_number %}">{{b.blog_content|truncatechars:300}}</p>
+                        {% endif %}
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="commentBox" style="margin-left:0;padding:7px;">
+		 	        <div class="postStatBox clearfix">
+			       {% if user.is_authenticated %} {% phileo_widget user b %} {% else %}
+                        <a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Like">
+			<span class="glyphicon glyphicon-thumbs-up largeFont " title="Like"></span><span class="likeNum">Like</span></a>
+			<a class="btn btn-default smallFont ajax marginL" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);"  onclick="logch(event);" title="share">
+			<span class="glyphicon glyphicon-share-alt largeFont " title="Share"></span><span class="likeNum">Share</span></a>
+			<div class="clearfix"></div>
+			<span class="likeTxt">{{b|likes_count}} people liked this</span>{% endif %}
+			        <div class="floatR">
+                        <span class="glyphicon glyphicon-comment colorGrey"></span>
+                        {% get_comment_count for blogs.blog b.id as count %}
+                        <span class="">{{count}}</span>
+                         <span class="marginL"><a href="{{b.get_absolute_url}}" class="colorBlue"><b>Read blog </b><span class="glyphicon glyphicon-chevron-right"></span></a></span>
+			        </div>
+                    </div>
+                   </div>
+                </div>   <hr/>
+<script type="text/javascript">
+                var a = document.getElementById('blogEdSnap{{forloop.counter}}{% show_current_number %}');
+                var b = a.innerText || a.textContent;
+                a.innerHTML = b;
+                                </script>
+
+                {% endfor %}
+{% show_pages %}

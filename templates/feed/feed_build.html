@@ -1,0 +1,58 @@
+{% extends 'userena/signup_complete.html' %}
+{% block title %}Build your feed{% endblock %}
+{% load static %}
+{% load activity_tags %}
+{% block mainContent %}
+
+<div class="container">
+  <a href="/"><img src="{% static 'img/logo5.png'%}" style="margin-left:37%;" class="loginPagelogo" alt="HouseofGrads"/></a>
+<div class="col-lg-12">
+<div>
+<div class="panel panel-primary usertip" >
+<div class="panel-heading largeFont"><span class="glyphicon glyphicon-user marginR"></span>Thank you for your patience, these are our top users who you can follow...</div>
+
+<div class="panel-body clearfix">
+{% for t in top_users %}
+				<div class="followPanel {% if user|is_following:t.0 %}disabledFollow{%endif%}">
+				<div class="thumbnail">
+				<div class="clearfix" style="height:135px;">
+				 <a href="{{t.0.get_absolute_url}}" target="_blank" class="">
+					<img class="mugshot" src="{{t.0.get_profile.mugshot}}" alt="" >
+				</a>
+				</div>
+				<div class="caption">
+				<p class="largeFont"> <a href="{{t.0.get_absolute_url}}" class="colorBlue">{{t.0.username}}</a></p>
+				<p><span class="colorGrey glyphicon glyphicon-user"style="margin-right:5px;color:#aaa;"></span>{{t.1}} followers</p>
+				<p><button id="{{t.0.id}}" {% if user|is_following:t.0 %}disabled="disabled"{% endif %} class="btn btn-success feedFollow marginT">
+				{% if user|is_following:t.0 %}Following{% else %}Follow{% endif %}</button></p>
+				</div></div>
+				</div>
+{% endfor %}
+</div>
+</div>
+<div class="panel panel-primary">
+<div class="panel-heading largeFont"><span class="glyphicon glyphicon-list marginR"></span>Some popular discussions you can follow...</div>
+<div class="panel-body clearfix">
+
+{% for threads in top_threads %}
+<div class="marginT clearfix {% if user|is_following:t.0 %}disabledFollow{%endif%}">
+<h5><a class="colorBlue" target="_blank" href="{{threads.0.get_absolute_url}}">{{threads.0.name|truncatechars:100 }}</a><span class="marginL smallFont colorGrey"><span class="glyphicon glyphicon-user" style="margin-right:5px;color:#aaa;"></span>{{threads.1}} followers</span>
+<button id="{{threads.0.id}}" {% if user|is_following:threads.0 %}disabled="disabled"{% endif %} class="btn btn-success feedThreadFollow floatR threadFollowBtn">{% if user|is_following:threads.0 %}Following{% else %}Follow{% endif %}</button></h5>
+</div>
+{% endfor %}
+
+<button type="submit" id="configFeed" class="btn btn-primary marginT">Show my feed</button>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+{% endblock %}
+
+{% block myJS %}
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}

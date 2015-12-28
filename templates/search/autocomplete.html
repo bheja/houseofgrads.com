@@ -1,0 +1,20 @@
+{% if results_threads or results_users %}
+<ul class="list-group">
+{% if results_threads %}
+<li class="list-group-item searchlisthead"><b><span class="glyphicon glyphicon-list"></span><span style="margin-left:5px;">Threads</span></b></li>
+{% for result in results_threads %}
+                <li class="list-group-item">
+                    <a href="{{ result.object.get_absolute_url }}"><b>{{ result.object.name }}</b></a>
+                </li>
+{% endfor %}
+{% endif %}
+{% if results_users %}
+<li class="list-group-item searchlisthead"><b><span class="glyphicon glyphicon-user"></span><span style="margin-left:5px;">Users</span></b></li>
+{% for result in results_users %}
+			<li class="list-group-item">
+                    <a href="{{ result.object.get_absolute_url }}"><b>{{ result.object.username }}</b></a>
+              </li>
+{% endfor %}
+{% endif %}
+</ul>
+{% endif%}

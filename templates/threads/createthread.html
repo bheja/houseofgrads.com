@@ -1,0 +1,41 @@
+{% load static %}
+<div id="createThreadModal" class="modal fade" tabindex="-1" aria-hidden="true">
+			<div class="modal-content loginModalSizing customThreadModalSize">
+			<div class="bgDark">
+			<button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+			<h4 class="fontColor">Create a discussion thread</h4>
+			</div>
+			<div class="modal-body">
+			<form class="" action="" id="ThreadForm" method="post">{% csrf_token %}
+				<p><b>Title of the Thread:</b></p>
+				<div class="clearfix"></div>
+				<input type="text" disabled id="threadTitle" class="form-control">
+				<div class="clearfix"></div>
+				<p class="marginT"><b>Description (Tell people what this thread is all about):</b></p>
+				<div class="threadDesArea">
+				<textarea id="textThread" class="form-control" name='brief' placeholder="Tell fellas something about the thread and who should participate in discussion..." autofocus="none"></textarea>
+				</div>
+				<div class="postPanel row clearfix">
+				<div class="createThreadSelect floatL clearfix">
+				<span class="floatL"><b>Category: </b></span>
+				<select id ="streamSelect" class="form-control floatL">
+					<option value="CS" {%if user.get_profile.gate_stream == 'CS'%}selected{%endif%}>GATE-Computer science prep</option>
+					<option value="EC" {%if user.get_profile.gate_stream == 'EC'%}selected{%endif%}>GATE-Electronics prep</option>
+                    <option value="EE" {%if user.get_profile.gate_stream == 'EE'%}selected{%endif%}>GATE-Electrical prep</option>
+                    <option value="ME" {%if user.get_profile.gate_stream == 'ME'%}selected{%endif%}>GATE-Mechanical prep</option>
+					<option value="CH" {%if user.get_profile.gate_stream == 'CH'%}selected{%endif%}>GATE-Chemical prep</option>
+					<option value="CV" {%if user.get_profile.gate_stream == 'CV'%}selected{%endif%}>GATE-Civil prep</option>
+                    <option value="ENG">GATE and engineering schools</option>
+                    <option value="JNC">Jobs and career</option>
+                    <option value="PSU">GATE and PSUs</option>
+				</select>
+				</div>
+				<div class="btn-group btn-group-sm floatR">
+                <a href="javascript:void(0);" class="btn btn-default marginR" onclick="fresh_create_thread();"><b>Back</b></a>
+				<button type="submit" id="submitThread" class="btn btn-primary"><b>Create</b></button>
+				</div>
+				</div>
+			</form>
+			</div>
+			</div>
+</div>

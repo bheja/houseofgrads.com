@@ -1,0 +1,64 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% load humanize %}
+{% load endless %}
+{% block title %}{% if name == 'ENG' %}GATE and engineering schools
+            {% elif name == 'PSU' %}GATE and PSUs
+            {% elif name == 'JNC' %}Jobs and career
+            {% else %} GATE {{name}} discussion forum{% endif %}
+        {% endblock %}
+{% block postArea %}
+<div>
+    <div class="largeFont discussionContainer"><h4 class="marginTZero">
+            {% if name == 'ENG' %}GATE and engineering schools
+            {% elif name == 'PSU' %}GATE and PSUs
+            {% elif name == 'JNC' %}Jobs and career
+            {% else %} GATE {{name}} discussion forum{% endif %}</h4>
+      <p class="marginT"> <span class="glyphicon glyphicon-user largeFont colorBlue"></span><span class="largeFont" style="margin-left:3px;">{{no_users}} users</span>
+        <span class="glyphicon glyphicon-list largeFont marginL colorBlue"></span>
+          <span class="largeFont">{{object_list.count}} threads</span>
+        <span class="glyphicon glyphicon-th largeFont marginL colorBlue"></span>
+          <span class="largeFont">{{no_posts}} posts</span>
+      </p>
+		</div>
+
+</div>
+{% endblock %}
+{% block newsFeed %}
+        <div id="discussionList" class="marginT">
+ {% include 'threads/discussion_list.html' %}</div>
+
+{% endblock %}
+       {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+{% block js %}
+<script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript">
+followingthreadlist();
+var stickyTop = $('#sideMenu').offset().top; // returns number
+
+	$(window).scroll(function(){ // scroll event
+
+    var windowTop = $(window).scrollTop(); // returns number
+
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+    }
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+    }
+  });
+$.endlessPaginate({pageSelector: '#discussionList', onCompleted: function(context, fragment){
+
+                    $('#discussionList').find('.panel-body').find('img').each(function(i){
+                     var url = $(this).attr('src');
+                    url = url.substring(2);
+                    $(this).attr('src',url);
+					$('.urltooltip').tooltip();
+				});
+}});
+</script>
+{% endblock %}

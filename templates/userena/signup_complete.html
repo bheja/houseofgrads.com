@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+   <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	{% load static %}
+
+  {% load url from future %}
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap_non_resp.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+  {% block css %}
+  {% endblock %}
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+	<!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+	{% block icon %} {% endblock %}
+	<title>{% block title %}Almost done!{% endblock %}</title>
+	</head>
+  <body>
+  <input type="hidden" id="flagVal" value="{{flag}}" />
+  <div id="theme">
+	<div class="mainWrapper">
+        {% block mainContent %}
+<div class="container">
+  <a href="/"><img src="{% static 'img/logo5.png'%}" style="margin-left:37%;" class="loginPagelogo" alt="HouseofGrads"/></a>
+<div class="col-lg-12">
+<div>
+<div class="panel panel-primary">
+<div class="panel-heading largeFont">Thanks for signing up! Let's get you started..</div>
+<form action="" method="post" id="profileForm">{% csrf_token %}
+<div class="panel-body">
+			<div class="input-group">
+			<span class="input-group-addon">Choose a Nick:</span>
+			<input type="text" class="form-control widthHalf" id="checkUserText" value="" name="username" placeholder="Minimum 4 letters..."/>
+			</div>
+			<div class="row marginT" style="padding-left:0;">
+				<div class="col-xs-2 col-md-3" style="margin-left:0;padding-left:0;">
+					<div class="thumbnail" style="background-color:#eee;margin-bottom:0;">
+					
+					<div class="" id="uploadButton">
+					</div>
+					<div class="caption">
+					<div class ="uploadedFilePanel2"></div>
+					</div>
+					</div>
+				</div>
+				<div class="col-xs-2 col-md-3">
+				 <a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/Angel.png" alt="" >
+				</a>
+				</div>
+				<div class="col-xs-2 col-md-3">
+				 <a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/Devil.png" alt="" >
+				</a>
+				</div>
+				<div class="col-xs-2 col-md-3">
+				 <a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/Girl.png" alt="" >
+				</a>
+				</div>
+				<div class="col-xs-2 col-md-3">
+				 <a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/Kid.png" alt="" >
+				</a>
+				</div>
+				<div class="col-xs-2 col-md-3">
+				 <a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/King.png" alt="" >
+				</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-2 col-md-3">
+				</div>
+				<div class="col-xs-2 col-md-3">
+				<a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/Mermaid.png" alt="" >
+				</a>
+				</div>
+				<div class="col-xs-2 col-md-3">
+				<a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/Knight.png" alt="" >
+				</a>
+				</div>
+				<div class="col-xs-2 col-md-3">
+				<a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/Princess.png" alt="" >
+				</a>
+				</div>
+				<div class="col-xs-2 col-md-3">
+				<a href="#" class="thumbnail avatarSelect">
+					<img class="" data-src="holder.js/100%x180" src="/media/mugshots/avatars/Robot.png" alt="" >
+				</a>
+				</div>
+			</div>
+			<div class="row clearfix">
+				<div class="input-group floatL" style="width:40%;">
+				<span class="input-group-addon">First Name:</span>
+				<input type="text" class="form-control" name="firstname" value="" placeholder="Minimum 4 letters..."/>
+				</div>
+				<div class="input-group floatL marginL" style="width:40%;">
+				<span class="input-group-addon">Last Name:</span>
+				<input type="text" class="form-control" name="lastname" value="" placeholder="Minimum 4 letters..."/>
+				</div>
+				
+			</div>
+			<div class="row clearfix">
+			<div class="input-group floatL" style="width:70%;">
+				<span class="input-group-addon">GATE stream:</span>
+				<select id ="profileStreamSelect" class="form-control floatL" name="gate_stream">
+					<option value="" selected="selected">Please select..</option>
+					<option value="CS">Computer Science and Information Technology</option>
+                    <option value="EC">Electronics Engineering</option>
+					<option value="EE">Electrical Engineering</option>
+					<option value="ME">Mechanical Engineering</option>
+					<option value="CH">Chemical Engineering</option>
+					<option value="CV">Civil Engineering</option>
+				</select>
+				</div>
+			<button type="submit" id="submitProfile"  class="btn btn-primary floatR">{% if flag|stringformat:'s' != '' %}Finish and Download{% else %}Let's start...{% endif %}</button>
+			</div>
+</div>
+<input type="hidden" id="email" name="email" value="{{email}}">
+</form>
+<input type="hidden" name="mugshot" id = "profileImg" value=""/> 
+</div>
+</div>
+
+</div>
+</div>
+        {% endblock %}
+
+        <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/cookie.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/scrollbar.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/eldarion-ajax.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/validate.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/tooltipvalidate.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/endless-pagination.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/suggest.js' %}"></script>
+  <script type="text/javascript" src="{%static 'js/highlight.js'%}"></script>
+ {% block myJS %}
+<script type ="text/javascript" src="{% static 'js/fileuploader.js' %}"></script>
+<script type="text/javascript">
+var uploader = new qq.FileUploader({
+            action: "/upload/profile/mugshot/",
+			template:'<div class="qq-uploader clearfix">' +
+					'<div class="btn btn-default qq-upload-button floatL marginAuto" title="Upload your pic or choose Avatar"><img style="width:80%;" id="mugshotImage" src="{{user.get_profile.mugshot}}"/></div>' +
+					'</div>',
+			fileTemplate: '<div class="progress progress-striped active"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">' +
+                '<span class="qq-upload-file"></span>' +
+				'<span class="qq-upload-size" style="display:none !important;"></span>' +
+                '<a class="qq-upload-cancel" href="#">Cancel</a>' +
+                '<span class="qq-upload-failed-text">Failed</span>' +
+            '</div></div>',
+            element: $('#uploadButton')[0],
+			listElement: $('.uploadedFilePanel2')[0],
+            multiple: false,
+			onSubmit: function(id, fileName){$('.uploadedFilePanel2').show(); $('.avatarSelect').each(function(){$(this).removeClass('selectedAvatar')});},
+            onComplete: function( id, fileName, responseJSON ) {
+              if( responseJSON.success )
+              {
+			  if($('.uploadedFileUrl').length==0){
+			  $('.qq-upload-file').after('<input class="uploadedFileUrl" type="hidden" value="'+responseJSON.path+'"/>');}else{
+			  $('.uploadedFileUrl').val(responseJSON.path);
+			  }
+			  $('.qq-upload-button img').attr('src',responseJSON.path);
+			  if($('.qq-upload-file').text().length>4){var txt=$('.qq-upload-file').text().substring(0,5)+'..';
+				$('.qq-upload-file').text(txt);
+			  }
+			  if ($('.uploadedFilePanel2').find('div.alert').length==2){
+              $('.uploadedFilePanel2').find('div.alert').first().remove();}
+			  }
+			  else{}},
+            onAllComplete: function( uploads ) {
+			  for(i=0;i<uploads.length;i++){
+			  $('#profileImg').val(uploads[i]['response']['path']);
+			  }},
+            params: {
+              'csrf_token': '{{ csrf_token }}',
+              'csrf_name': 'csrfmiddlewaretoken',
+              'csrf_xname': 'X-CSRFToken',
+            }
+          }) ;
+$('.qq-upload-button').tooltip();
+</script>
+        {% endblock %}
+</div></div>
+  </body>
+</html>

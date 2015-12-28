@@ -1,0 +1,35 @@
+{% load static %}
+<div id="loginModal" class="modal fade in" tabindex="-1" aria-hidden="true">
+	 <div class="modal-content loginModalSizing">
+	 <div class="bgDark">
+	 <button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+	 <h4 class="fontColor">Login to HouseofGrads</h4>
+	 </div>
+	 <div class="modal-body">
+	<div class=""><a href="{% url 'social:begin' 'facebook' %}?next={% if request.path == '/'%}/home/{%else%}{{request.path}}{% endif %}" class="facebook_button btn btn-lg ">
+    <span class="colorWhite">Login with facebook</span></a><div class="clearfix"></div>
+    <p class="colorGrey marginT">Don't worry, we will never post on your behalf.</p></div>
+	 <hr class="divider">
+         <p class="colorGrey ">Or, Login using houseofgrads credentials</p>
+        <p id="errMsg" class="marginT"></p>
+	 <form class="form-signin marginT" action="/" id="loginForm" method="post">
+		<div id="ajaxwrapper">
+		{% csrf_token %}
+		<div>{{ login_form.username.label_tag }}</div>
+		<div>{{ login_form.username}}</div>
+		<div class="clearfix"></div>
+		<div>{{ login_form.password.label_tag }}</div>
+        <div>{{ login_form.password }}</div>
+        <label class="checkbox">
+          <input type="checkbox" name="remember" id="rememberCheck" /> Remember me
+		  <a href="/accounts/password/reset/" style="margin-left:10px;">Forgot password?</a>
+        </label>
+        <div class="marginB" id="sendwrapper">
+		<button class="btn btn btn-primary btn-primary-shopster" type="submit" id="loginButton">Log in</button>
+		</div>
+		<a class="marginLten marginT" href="javascript:void(0);" onclick="registerModalShow();" id="loginRegisterLink">Don't have credentials? Register here</a>
+      </div>
+	  </form>
+	  </div>
+	  </div>
+	  </div>

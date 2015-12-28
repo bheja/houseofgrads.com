@@ -1,0 +1,205 @@
+{% extends "base/nav.html" %}
+  {% load static %}
+  {% load url from future %}
+  {% block css %}
+   <!-- <link rel="stylesheet" href="{% static 'css/jscrollpane.css' %}"/> -->
+  {% endblock %}
+  {% block title %}
+  Welcome to GradPoint, the GATE forum
+  {% endblock %}
+  
+		{% block bodyContent %}
+		<section>
+			<div id = "myCarousel" class="carousel">
+				<div class="carousel-inner">
+					<div class='item active'>
+						<img src="{% static 'img/iitd_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="#" class='boldText'>IIT Delhi ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitb_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="#" class='boldText'>IIT Bombay ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitr_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="#" class='boldText'>IIT Roorkee ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitm_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="#" class='boldText'>IIT Madras ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitk_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="#" class='boldText'>IIT Kanpur ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitkgp_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="#" class='boldText'>IIT Kharagpur ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitg_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="#" class='boldText'>IIT Guwahati ››</a>
+							</div>
+						</div>
+					</div>
+					
+					</div>
+					<div class="container">
+						<div class="carousel-caption">
+						<h1>Start your preparation today.</h1>
+						<p class="lead">Achieve your dream through India's first online GATE community.</p>
+						  <div class="col-lg-6">
+								<div class="input-group">
+								<input type="text" class="form-control moreWidth" placeholder="Search for discussions, colleges, news etc....">
+								<span class="input-group-btn">
+								<button class="btn btn-default btn-success" type="button">Search</button>
+								</span>
+								</div><!-- /input-group -->
+							</div>
+							<div class="clearfix"></div>
+						<p class="marginT">Post questions, follow colleges and much more.<a href="#" class="boldText textUnderline" data-toggle="modal" data-target="#registerModal">Sign up here</a>, It'll only take a minute.</p>
+						</div>
+					</div>
+			<a class="left carousel-control" data-slide="prev" href="#myCarousel">‹</a>
+			<a class="right carousel-control" data-slide="next" href="#myCarousel">›</a>
+			</div>
+			<div class="container marginT">
+				<div class="row">
+					<div class="col-lg-7">
+				<div id="myCarousel2" class="carousel slide">
+					<div class="carousel-inner">
+						<div class="item active">
+							<img src="{% static 'img/1.jpg' %}" alt=''/>
+							<div class="container">
+								<div class="carousel-caption newsContent">
+								<p class="lead paddingL">Menendez Denies Allegations in New Reported FBI..</p>
+								<p class="paddingL">The New Jersey Democrat’s office rejected reports of an expanded investigation into corruption, 
+								involving the senator and two Ecuadorian bankers accused...</p>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<img src="{% static 'img/3.jpg' %}" alt=''/>
+							<div class="container">
+								<div class="carousel-caption newsContent">
+								<p class="lead paddingL">British Candidate Receives Death Threats for Tweeting...</p>
+								<p class="paddingL">British Muslim politician Maajid Nawaz receives death threats after tweeting a picture of a 
+								t-shirt featuring a cartoon...</p>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<img src="{% static 'img/2.jpg' %}" alt=''/>
+							<div class="container">
+								<div class="carousel-caption newsContent">
+								<p class="lead paddingL">Netanyahu: Israel’s What’s Right With the Middle East.</p>
+								<p class="paddingL">Speaking at Davos, the Israeli Prime Minister tried to sell his country as “what’s right with the Middle East.” </p>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					<div class="carousel-caption newsLabel">
+							<h4 class="marginL">Latest News</h4>
+					</div>
+					<ol class="carousel-indicators newsIndicators">
+							<li class="active" data-slide-to="0" data-target="#myCarousel2"></li>
+							<li data-slide-to="1" data-target="#myCarousel2" class=""></li>
+							<li data-slide-to="2" data-target="#myCarousel2" class=""></li>
+					</ol>
+					<a data-slide="prev" href="#myCarousel2" class="left carousel-control"><span class="glyphicon glyphicon-chevron-left"></span></a>
+					<a data-slide="next" href="#myCarousel2" class="right carousel-control"><span class="glyphicon glyphicon-chevron-right"></span></a>
+				</div>
+			</div>
+					<div class="col-lg-5">
+						<div class="carousel-caption newsLabel">
+								<h4 class="marginL">Latest Discussions</h4>
+							</div>
+						<div class="latestDiscuss" id="discussionBlock">
+							<div class="">
+								<h4><a href="#">GATE 2015 [general info]</a></h4>
+								<span class="">shdkigj kdfgnsL dsndjnh cdjfnz cdjfdjcnadj vdhn cdjjsonrrjkhajjkkkjkhgshsin</span>
+							</div>
+							<div class="">
+								<h4><a href="#">[GATE-CS] General questions thread</a></h4>
+								<span class="">shdkigj kdfgnsL dsndjnh cdjfnz cdjfdjcnadj vdhn cdjjsonrrjkhaj jkkkjkhgshsin</span>
+							</div>
+							<div class="">
+								<h4><a href="#">[GATE-PH] last 5 years official thread</a></h4>
+								<span class="">shdkigj kdfgnsL dsndjnh cdjfnz cdjfdjcnadj vdhn cdjjsonrrjk hajjkkkjkhgshsin</span>
+							</div>
+							<div class="">
+								<h4><a href="#">[GATE-EE] Official EE thread for discussions</a></h4>
+								<span class="">shdkigj kdfgnsL dsndjnh cdjfnz cdjfdjcnadj vdhn cdjjsonrrjkhajjkkkjkhgshsin</span>
+							</div>
+							<div class="">
+								<h4><a href="#">[GATE-EE] Official EE thread for discussions</a></h4>
+								<span class="">shdkigj kdfgnsL dsndjnh cdjfnz cdjfdjcnadj vdhn cdjjsonrrjkhajjkkkjkhgshsin</span>
+							</div>
+							<div class="">
+								<h4><a href="#">[GATE-EE] Official EE thread for discussions</a></h4>
+								<span class="">shdkigj kdfgnsL dsndjnh cdjfnz cdjfdjcnadj vdhn cdjjsonrrjkhajjkkkjkhgshsin</span>
+							</div>
+							<div class="">
+								<h4><a href="#">[GATE-EE] Official EE thread for discussions</a></h4>
+								<span class="">shdkigj kdfgnsL dsndjnh cdjfnz cdjfdjcnadj vdhn cdjjsonrrjkhajjkkkjkhgshsin</span>
+							</div>
+							<div class="">
+								<h4><a href="#">[GATE-EE] Official EE thread for discussions</a></h4>
+								<span class="">shdkigj kdfgnsL dsndjnh cdjfnz cdjfdjcnadj vdhn cdjjsonrrjkhajjkkkjkhgshsin</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		
+	</section>
+	<div id="msgModal" class="modal fade in" tabindex="-1" aria-hidden="true">
+	<div class="modal-content loginModalSizing">
+	 <div class="bgDark">
+	 <button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+	 <h4 class="fontColor">Congrats!</h4>
+	 </div>
+	  <div class="modal-body">
+		<div class="alert alert-success">Email {{viewed_user.email}} has been added to your account. You can now use this email to login.</div>
+	  </div>
+	</div>
+	</div>
+	 
+	 
+	{% endblock %}
+  
+  {% block js %}
+  	<script type="text/javascript">
+	$('#msgModal').modal('show');
+	$('#msgModal').on('hidden.bs.modal', function(e){window.location='/'});
+  </script>
+  {% endblock %}
+  

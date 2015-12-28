@@ -1,0 +1,190 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% load comments %}
+{% load humanize %}
+{% load phileo_tags %}
+{% block title %}{{object.author}}'s post{% endblock %}
+{% block postArea %}
+	<div class="newsFeedWrapper clearfix" onmouseover="showoptionfeed(this);" onmouseout="hideoptionfeed(this);">
+		<div class="clearfix floatL" style="width:8%;"><a href="{{object.author.get_absolute_url}}">
+		<img class="mugshotpic" src="{{ object.author.get_profile.mugshot }}" alt=""/></a>
+		</div>
+		<div class="newsFeedItem">
+            <a href="{{object.author.get_absolute_url}}" class="actorUser"><b>{{object.author}}</b></a>
+		    {%if request.user == object.author %}
+			<a href="javascript:void(0);" class="hiding floatR deleteLink colorGrey" data-content="<a href='javascript:void(0);' onclick = 'delete_post({{object.id}},this)' class='deleteItem colorGrey'>Delete</a>">
+                <span class="glyphicon glyphicon-remove"></span></a>
+            {% else %}
+            <a href="javascript:void(0);" class="hiding floatR reportLink colorGrey" data-content="<a href='javascript:void(0);' onclick = 'report_post({{object.id}},this)' class='reportItem colorGrey'>Delete</a>">
+                <span class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+
+			
+			<div class="clearfix"></div>
+				<span class="timestampText">{{ object.date|naturaltime }}</span><span class="timestampText"> </span>
+		<div class="contentNewsFeed"><span id="feedText" class="">{% autoescape off %}{{object.content}}{% endautoescape %}</span>{% if object.previewurl %}<div class="previewContains">{% autoescape off %}{{object.previewurl}}{% endautoescape %}</div>{% endif %}
+			{% if object.image.all %}
+		<div class="imagePanel clearfix marginT">
+			{% for img in object.image.all %}
+			<a href="" class="imageModalLink floatL" onclick="get_image(this)" data-target="#imageModal" data-toggle="modal" ><img src="{{MEDIA_ROOT}}{{img}}" alt="" class="postImage floatL"/></a>
+			{% endfor%}
+		</div>
+		{% endif %}
+
+		</div>
+		
+		</div>
+		<div class="clearfix"></div>
+		 <div class="commentBox" >
+		 	<div class="postStatBox clearfix">
+			{% if user.is_authenticated %}{% phileo_widget user object %}
+			{%else%}
+			<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Like">
+			<span class="glyphicon glyphicon-thumbs-up largeFont " title="Like"></span><span class="likeNum">Like</span></a>
+			<a class="btn btn-default smallFont ajax marginL" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);"  onclick="logch(event);" title="share">
+			<span class="glyphicon glyphicon-share-alt largeFont " title="Share"></span><span class="likeNum">Share</span></a>
+			<div class="clearfix"></div>
+			<span class="likeTxt">{{object|likes_count}} people liked this</span>
+			{% endif %}
+			</div>	
+				
+				{% get_comment_form for posts.createpost object.id as comm_form %}
+				
+				{{ comm_form.content_type }}
+				{{ comm_form.object_pk }}
+				{{ comm_form.timestamp }}
+				{{ comm_form.security_hash }}
+				<input type="hidden" value='{{ csrf_token }}'id='id_csrf' />
+				
+				{% get_comment_count for posts.createpost object.id as count %}
+				 {% if count = 0 or count = 1 or count = 2 %} 
+						{% get_comment_list for posts.createpost object.id as comment_list %}
+							<div class="parentCommentList">
+							
+							<hr>
+							{% for comment in comment_list %}
+								
+									<div class="commentList clearfix">
+									
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.mugshot }}" class="commentMugshot"/></a>
+									</div>
+									
+									<div class="commentBody"> 
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt" id="commentTxt{{forloop.counter}}">{% autoescape off %}{{ comment.comment}}{% endautoescape %}</span></span>
+									</div>
+
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% if user.is_authenticated %}{% phileo_widget_brief request.user comment %}
+                                        <span> · </span>{% if comment.user == request.user or object.author == request.user %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'delete_comment({{comment.id}},this)'>Delete</a>" class="deleteCommentLink colorGrey">Delete</a>
+                                        {% else %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'report_comment({{comment.id}},this)'>Report</a>" class="reportCommentLink colorGrey">Report</a>
+                                        <input type="hidden" id="id_content_obj" value="{{object.id}}">
+                                        {% endif %}
+										{% else %}
+										<span class="phileoComment">
+										<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Good one">
+										<span class="glyphicon glyphicon-circle-arrow-up" style="font-size:12px;" title="Like"><span class="commentLikeCount">{% if comment|likes_count != 0 %}{{comment|likes_count}}{% endif %}</span></span></a>
+										</span>
+										{% endif %}
+
+									</div>
+									
+									</div>
+								
+							{% endfor %}
+							</div>
+							
+							<div class="commentForm clearfix input-group-sm marginT">
+							    <input type="hidden" value="" class="tagElement"/>
+                                <textarea id = "id_new_comment" onfocus="tinyMCEcomm(this);" class="commentArea form-control noResize"  placeholder="Write a comment..." required></textarea>
+							<div class="btn-group btn-group-sm floatR hiding marginT">
+							<button type="submit"  class="commentSubmit btn btn-default" {% if user.is_active %}onclick="postComm(this);"{%else%}onclick="actch(event);"{%endif%}>
+							<b>Comment</b></button>
+							</div>
+
+							</div>
+							
+				{% else %}
+					
+					<!-- <div class="parentCommentList">
+					</div> -->
+					 {% get_comment_list for posts.createpost object.id as comment_list %}
+					 <hr>
+							<a href="javascript:void(0)" class="marginT" onclick="getCommentList(this,{{object.id}})">View previous comments({{count|add:"-2"}})</a>
+							<div class="parentCommentList marginT">
+							
+							{% for comment in comment_list|slice:"-2:"  %}
+									
+									<div class="commentList clearfix">
+									
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.mugshot }}" class="commentMugshot"/></a>
+									</div>
+									<div class="commentBody"> 
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt" id="commentTxt{{forloop.counter}}">{% autoescape off %}{{ comment.comment}}{% endautoescape %}</span></span>
+									</div>
+
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% if user.is_authenticated %}{% phileo_widget_brief request.user comment %}
+                                        <span> · </span>{% if comment.user == request.user or object.author == request.user %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'delete_comment({{comment.id}},this)'>Delete</a>" class="deleteCommentLink colorGrey">Delete</a>
+                                        {% else %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'report_comment({{comment.id}},this)'>Report</a>" class="reportCommentLink colorGrey">Report</a>
+                                        <input type="hidden" id="id_content_obj" value="{{object.id}}">
+                                        {% endif %}
+										{% else %}
+										<span class="phileoComment">
+										<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Good one">
+										<span class="glyphicon glyphicon-circle-arrow-up" style="font-size:12px;" title="Like"><span class="commentLikeCount">{% if comment|likes_count != 0 %}{{comment|likes_count}}{% endif %}</span></span></a>
+										</span>
+										{% endif %}
+									</div>
+									
+									</div>
+								
+							{% endfor %}
+							</div>
+					
+					
+					<div class="commentForm clearfix input-group-sm marginT">
+					<textarea id = "id_new_comment{{forloop.counter}}" onfocus="tinyMCEcomm(this);" class="commentArea form-control noResize"  placeholder="Write a comment..." required></textarea>
+					<div class="btn-group btn-group-sm floatR hiding marginT">
+							<button type="submit"  class="commentSubmit btn btn-default" {% if user.is_active %}onclick="postComm(this);"{%else%}onclick="actch(event);"{%endif%}>
+							<b>Comment</b></button>
+							</div>
+					<input type="hidden" value="" class="tagElement"/>
+					</div>
+					
+				{% endif %}
+			</div>
+		
+			<script type="text/javascript">
+			var e1 = document.getElementById('id_content_type');
+			var e3 = document.getElementById('id_timestamp'); 
+			var e2 = document.getElementById('id_object_pk'); 
+			var e4 = document.getElementById('id_security_hash'); 
+			var e5 = document.getElementById('id_csrf');
+			e1.id = 'id_ctype{{forloop.counter}}';
+			e2.id = 'id_opk{{forloop.counter}}';
+			e3.id = 'id_timestamp{{forloop.counter}}';
+			e4.id = 'id _sh{{forloop.counter}}';
+			e5.id = 'id_csrf{{forloop.counter}}';
+			</script>
+		</div>
+{% endblock %}
+{% block newsFeed %}
+
+{% endblock %}
+ {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+{% block js %}
+<script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+
+{% endblock %}

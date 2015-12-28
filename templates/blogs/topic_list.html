@@ -1,0 +1,77 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% block title %}Blogs{% endblock %}
+{% block postArea%}
+<div>
+    <ul class="nav nav-tabs" id="blogTabs">
+                <li class="{% if flag == 'all'%}active{%endif%}"><a href="#topiclistTab" id="alltab" data-toggle="tab">All topics</a></li>
+                <li class="{% if flag == 'editorpicks'%}active{%endif%}"><a href="#editorchoiceTab" id="editorTab" data-toggle="tab">Editor's choice</a></li>
+                <li class="{% if flag == 'latest'%}active{%endif%}"><a href="#latestblogTab" id="latestTab" data-toggle="tab">Latest</a></li>
+            </ul>
+    <div class="tab-content">
+        <div id="topiclistTab" class="tab-pane fade {% if flag == 'all'%}in active{% endif %}">
+        {% for t in topics %}
+   <div class="blogItemWrapper clearfix">
+                    <div class="blogHeading">
+                        <h4 style="margin-bottom:10px;"><a href="{{t.get_absolute_url}}">{{t.tag}}</a></h4>
+                    </div>
+                    <div class="blogPic">
+                        {% if t.tag_image.all%}
+                         {% for img in t.tag_image.all %}
+                       <a href="{{t.get_absolute_url}}"><img class="blogItemPic" src="{{img.url}}"/></a>{% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="commentBox" style="margin-left:0;padding:7px;">
+		 	        <div class="postStatBox clearfix">
+			        <span class="glyphicon glyphicon-list-alt colorBlue largeFont"></span><span class="largeFont" style="margin-left:5px;">{{t.no_blogs}} blogs</span>
+                    </div>
+                   </div>
+                </div>   <hr/>
+        {% endfor %}
+        </div>
+          <div id="editorchoiceTab" class="tab-pane fade {% if flag == 'editorpicks'%}in active{% endif %}">
+              {% include 'blogs/blog_editor_paginate.html' %}
+          </div>
+           <div id="latestblogTab" class="tab-pane fade {% if flag == 'latest'%}in active{% endif %}">
+              {% include 'blogs/blog_latest_paginate.html' %}
+          </div>
+
+        </div>
+</div>
+ {% endblock %}
+{% block newsFeed %}
+{% endblock %}
+
+{% block js %}
+
+<script type="text/javascript">
+window.onload = function(){blog_details_init();}
+                var stickyTop = $('#sideMenu').offset().top; // returns number
+
+	$(window).scroll(function(){ // scroll event
+
+    var windowTop = $(window).scrollTop(); // returns number
+
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+
+	}
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+
+    }
+  });
+  $(function(){
+  $('#blogTabs a').click(function(e){$(this).tab('show');});
+  });
+  $('#editorchoiceTab').endlessPaginate({onCompleted: function(context, fragment){
+            draft_all();
+				}});
+ $('#latestblogTab').endlessPaginate({onCompleted: function(context, fragment){
+            draft_all();
+				}});
+</script>
+{% endblock %}

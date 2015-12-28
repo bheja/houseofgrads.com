@@ -1,0 +1,21 @@
+{% load static %}
+<div id="checkThreadModal" class="modal fade" tabindex="-1" aria-hidden="true">
+			<div class="modal-content loginModalSizing customThreadModalSize">
+			<div class="bgDark">
+			<button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+			<h4 class="fontColor">Create a discussion thread</h4>
+			</div>
+			<div class="modal-body">
+
+				<p><b>Title of the Thread:</b></p>
+				<div class="clearfix"></div>
+				<textarea type="text" class="form-control marginT noResize" placeholder="Give a title to your thread..." name="q" id="searchThread"></textarea>
+				<div class="postPanel row clearfix">
+				<div class="btn-group btn-group-sm floatR">
+				<button id="checkThreadSubmit" onclick="seach_existing_t();" class="btn btn-primary"><b>Next</b></button>
+				</div>
+				</div>
+
+			</div>
+			</div>
+</div>

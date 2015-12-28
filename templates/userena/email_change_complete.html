@@ -1,0 +1,12 @@
+{% extends 'userena/profile_form.html' %}
+{% load url from future %}
+
+{% block title %}Change password{% endblock %}
+
+{% block postArea %}
+<div>
+<div class="alert alert-success largeFont">You have received an email at <b>{{ viewed_user.userena_signup.email_unconfirmed }}</b>.To associate this email address with your account <b>({{ viewed_user.username }})</b> click on the link provided in this email.</div>
+</div>
+{% endblock %}
+{% block js %}
+{% endblock %}

@@ -1,0 +1,2 @@
+{% load i18n %}
+{% blocktrans with site.name as site %}Thanks for signing up at HouseofGrads.com{% endblocktrans %}

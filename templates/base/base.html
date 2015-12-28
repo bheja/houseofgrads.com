@@ -1,0 +1,166 @@
+
+{% extends "base/nav.html" %}
+  {% load static %}
+    {% block metaData %}
+    <meta name="description" content="Houseofgrads: the GATE forum, discuss GATE questions, Connect to peers, share GATE questions, prepare for GATE CS, EC, Mechanical, Chemical, Civil papers..."/>
+{% endblock %}
+  {% load url from future %}
+  {% block css %}
+  {% endblock %}
+  {% block title %}
+  Welcome to HouseofGrads: the GATE forum, Achieve your dream through India's first online GATE community, Post questions, blogs and much more.
+  {% endblock %}
+
+		{% block bodyContent %}
+		<section>
+			<div id = "myCarousel" class="carousel">
+				<div class="carousel-inner">
+					<div class='item active'>
+						<img src="{% static 'img/iitb_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="http://www.iitb.ac.in/" target="_blank" class='boldText'>IIT Bombay ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitr_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="http://www.iitr.ac.in/" target="_blank" class='boldText'>IIT Roorkee ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitd_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="http://www.iitd.ac.in/" target="_blank" class='boldText'>IIT Delhi ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitm_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="#" class='boldText'>IIT Madras ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitk_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="http://www.iitk.ac.in/" target="_blank" class='boldText'>IIT Kanpur ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitkgp_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="http://www.iitkgp.ac.in/" target="_blank" class='boldText'>IIT Kharagpur ››</a>
+							</div>
+						</div>
+					</div>
+					<div class='item'>
+						<img src="{% static 'img/iitg_bg.jpg' %}" alt=""/>
+						<div class="container">
+							<div class="carousel-indicators">
+							<a href="http://www.iitg.ac.in/" target="_blank" class='boldText'>IIT Guwahati ››</a>
+							</div>
+						</div>
+					</div>
+					
+					</div>
+					<div class="container">
+						<div class="carousel-caption">
+						<h1>Start your preparation today.</h1>
+						<p class="lead">Achieve your dream through India's first online GATE community.</p>
+						  <div class="col-lg-6">
+                              <form action="/search/search/" method="get" id="mainSearchForm">
+								<div class="input-group">
+								<input type="text" name="q" id="mainSearchBox" onkeyup="search_result_main();" class="form-control moreWidth" placeholder="Search for discussions, colleges, news etc...."/>
+								<span class="input-group-btn">
+								<button class="btn btn-default btn-success" type="submit">Search</button>
+								</span>
+                                </div><!-- /input-group -->
+                                <div class="ajaxMainSearchResult"></div>
+                              </form>
+							</div>
+							<div class="clearfix"></div>
+						<p class="marginT">Post questions, blogs and much more.<a href="#" class="boldText textUnderline" data-toggle="modal" data-target="#registerModal"> Sign up here</a>, it'll only take a minute.</p>
+						</div>
+					</div>
+			<a class="left carousel-control" data-slide="prev" href="#myCarousel">‹</a>
+			<a class="right carousel-control" data-slide="next" href="#myCarousel">›</a>
+			</div>
+			<div class="container marginT">
+				<div class="row">
+					<div class="col-lg-7">
+				<div id="myCarousel2" class="carousel slide">
+					<div class="carousel-inner">
+                    {% for b in blogs %}
+						<div class="item {% if forloop.first %}active{% endif %}">
+							{% if b.cover_image %}<a href="{{b.get_absolute_url}}"><img style="max-height:300px;margin-right:auto;margin-left:auto;" src="{{b.cover_image.url}}" alt='{{b.id}}'/></a>{% else %}
+                            <img src="{% static 'img/no_cover.jpg' %}" alt='{{b.id}}'/>{% endif %}
+							<div class="container">
+								<div class="carousel-caption newsContent">
+								<p class="lead paddingL"><a href="{{b.get_absolute_url}}">{{b.title|truncatechars:50}}</a></p>
+								<div class="paddingL blogSnap" id="blogSnap{{forloop.counter}}">{% autoescape off %}{{b.blog_content}} {% endautoescape %}</div>
+                                   <script type="text/javascript">
+                var a = document.getElementById('blogSnap{{forloop.counter}}');
+                var b = (a.innerText || a.textContent).substring(0,200)+'...';
+                a.innerHTML = b;
+
+                                </script>
+								</div>
+							</div>
+						</div>
+                    {% endfor %}
+						</div>
+
+
+					<div class="carousel-caption newsLabel">
+							<h4 class="marginL">Latest Blogs</h4>
+					</div>
+					<ol class="carousel-indicators newsIndicators">
+						{% for b in blogs %}
+                        <li class="{% if forloop.first %}active{% endif %}" data-slide-to="{{forloop.counter|add:-1}}" data-target="#myCarousel2"></li>
+						{% endfor %}
+					</ol>
+					<a data-slide="prev" href="#myCarousel2" class="left carousel-control"><span class="glyphicon glyphicon-chevron-left"></span></a>
+					<a data-slide="next" href="#myCarousel2" class="right carousel-control"><span class="glyphicon glyphicon-chevron-right"></span></a>
+				</div>
+			</div>
+					<div class="col-lg-5">
+						<div class="carousel-caption newsLabel">
+								<h4 class="marginL">Popular Discussions</h4>
+							</div>
+
+
+						<div class="latestDiscuss panel panel-default" id="discussionBlock">
+                            <div>
+							{% include 'base/latest_threads_paginate.html' %}
+                             </div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+			
+		
+	</section>
+	{% include 'base/footer.html'%}
+	{% endblock %}
+
+  {% block js %}
+  	<script type="text/javascript">
+	if (window.location == 'http://houseofgrads.com/signout/' || window.location == 'http://www.houseofgrads.com/signout/')
+	{
+	window.location = 'http://houseofgrads.com/';
+	}
+  </script>
+
+  {% endblock %}

@@ -1,0 +1,21 @@
+{% load humanize %}
+{% load endless %}
+{% lazy_paginate messages %}
+{% show_more %}
+{% for message in messages reversed%}
+	<div class="panel-body">
+   <div class="row messageMenuRow clearfix">
+
+            <div style="margin-right:0;"><img class="mugshotpic" src="{{ message.user.get_profile.mugshot }}" alt=""/></div>
+                <div style="width:88%;">
+				<div class="clearfix"><a class="conversationLinks" href="{{message.user.get_absolute_url}}"><b>{{message.user.username}}</b></a><span class="timestampText floatR">{{ message.date|naturaltime }}</span>
+				</div>
+				<div><span id= "msg{{forloop.counter}}">
+				{{ message.text }}</span>
+				</div>
+				</div>
+
+    </div>
+
+	</div>
+	{% endfor %}

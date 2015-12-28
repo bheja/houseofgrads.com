@@ -1,0 +1,24 @@
+{% load static %}
+{% load comments %}
+{% load humanize %}
+{% load phileo_tags %}
+<div class="commentList clearfix">
+		<div class="commentUser">
+			<a href="{{object.user.get_absolute_url}}"><img src="{{ object.user.get_profile.mugshot }}" class="commentMugshot"/></a>
+		</div>
+		<div class="commentBody"> 
+			<span><a href="{{object.user.get_absolute_url}}"><b>{{ object.user }}</b></a>
+			<span class="commentTxt" id="commentLatTxt">{% autoescape off %}{{ object.comment}}{% endautoescape %}</span></span>
+		</div>
+
+		<div class="commentTimestamp">
+			<span class="timestampText">{{object.submit_date|naturaltime}} </span>
+				{% phileo_widget_brief request.user object %}
+             <span> · </span>{% if object.user == request.user %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'delete_comment({{object.id}},this)'>Delete</a>" class="deleteCommentLink colorGrey">Delete</a>
+                                        {% else %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'report_comment({{object.id}},this)'>Report</a>" class="reportCommentLink colorGrey">Report</a>
+
+                                        {% endif %}
+		</div>
+</div>

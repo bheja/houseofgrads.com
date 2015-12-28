@@ -1,0 +1,23 @@
+{% autoescape off %}{% load url from future %}
+<html>
+<body>
+    <div style="max-width:600px;min-width:320px; margin-left:auto;margin-right:auto;border:1px solid #ddd;">
+		<div style="height:50px;width:97%;padding:5px 10px;text-align:center;">
+			<a href="http://www.houseofgrads.com/"><img style="width:202px;" src="http://houseofgrads.com/static/img/logo5.png" title="" /></a>
+		</div>
+		<div style="padding:5px 10px;">
+			<p>Hi there,</p>
+			<p>Welcome to houseofgrads.com! Please click on the following link to activate your account.</p>
+			<div style="padding:5px 10px; width:97%; background-color:#f5f5f5;margin-top:20px;">
+			{{ protocol }}://{{ site }}{% url 'userena_activate' activation_key %}</div>
+			<p style="margin-top:20px;">Thanks for signing up with us.</p>
+			<p style="margin-top:20px;">With regards,</p>
+			<p><a href="http://www.houseofgrads.com/">HouseofGrads.com</a></p>
+		</div>
+		<div style="width:100%;margin-top:20px; padding:5px 10px;font-size:9px;color:#ccc;">
+		<p>This email was sent to {{user.email}}. If you want to unsubscribe to such mails, please <a href="http://www.houseofgrads.com/notifications/email/unsubscribe/{{user.username}}/">click here</a>.</p>
+		</div>
+	</div>
+</body>
+</html>
+{% endautoescape %}

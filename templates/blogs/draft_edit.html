@@ -1,0 +1,122 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% block title%}{{object.title}}{% endblock %}
+{% block postArea %}
+        <div>
+            <h4 style="margin-bottom:5px;color:#555;">{{object.title}}</h4>
+            <form action="" id="editBlogForm">
+                <input type="hidden" name="csrf" value="{{csrf_token}}" id="csrftoken"/>
+                <input type="hidden" name="author" value="{{user.username}}" id="id_author">
+        <div class="panel panel-default">
+            <div class="panel-body">
+            <div class="" id="uploadButton">
+			</div>
+            <div class="uploadedFilePanel2 marginT">
+                {% if object.cover_image %}<div class="alert alert-success">To remove cover pic, please click cross sign..<a href="#" class="floatR alert-link removeUploaded" onclick="remove_uploaded(this,false,'true');isblog('true');" title="remove">
+                    <span class="glyphicon glyphicon-remove"></span></a>
+
+                </div>{% endif %}
+                 <input type="hidden" class="uploadedFileUrl" value="{{object.cover_image.url}}"/>
+            </div>
+            </div>
+            <div class="panel-body">
+                <input type="text" name="title" class="form-control" placeholder="Give a title to your blog..." value="{{object.title}}">
+
+            </div>
+            <div class="panel-body" style="width:100.07%;">
+                <textarea name="blog_content" id="blogText" class="form-control noResize"></textarea>
+            </div>
+            <div class="panel-body">
+            <div class="input-group floatL">
+                <span class="largeFont">Publish under</span>
+                <select class="marginL" name="tag">
+                    <option value="">Select a topic</option>
+                    <option value="GATE">GATE</option>
+                    <option value="Life of Mtechs">Life of Mtechs</option>
+                    <option value="Masters abroad">Masters abroad</option>
+                    <option value="Masters in India">Masters in India</option>
+                    <option value="Building profile">Building profile</option>
+                    <option value="Enginnering or MBA">Enginnering or MBA</option>
+                    <option value="Technology">Technology</option>
+                     <option value="GATE v/s GRE">GATE v/s GRE</option>
+                    <option value="Current affairs">Current affairs</option>
+                     <option value="General">General</option>
+                </select>
+
+            </div>
+                <div class="floatR largeFont">by <span class="colorBlue largeFont"><b>{{user.get_profile.get_full_name_or_username}}</b></span></div>
+            </div>
+            <div class="panel-body">
+         <button type="submit" name="btnsubmit" value="draft" class="btn btn-default floatL">Save draft</button>
+          <button type="submit" name="btnsubmit" value="publish" class="btn btn-primary floatL marginL">Publish</button></div>
+            </div>
+            </form>
+            <input type="hidden" value="" id="img_url">
+            <input type="hidden" value="{{object.id}}" id="kpOOGh"/>
+            <div class="hiding clone">{{object.blog_content}}</div>
+        </div>
+{% endblock %}
+{% block newsFeed %}
+
+{% endblock %}
+ {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+{% block js %}
+<script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script type ="text/javascript" src="{% static 'js/fileuploader.js' %}"></script>
+<script type="text/javascript">
+ window.onload = function(){tinyMCEblog();setEditBlog('{{object.tag.tag}}');}
+ var stickyTop = $('#sideMenu').offset().top; // returns number
+
+	$(window).scroll(function(){ // scroll event
+
+    var windowTop = $(window).scrollTop(); // returns number
+
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+
+	}
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+
+    }
+  });
+ var uploader = new qq.FileUploader({
+            action: "/upload/blog/cover/",
+			template:'<div class="qq-uploader clearfix">' +
+					'<i class="blogPlayIcon"></i><div class="qq-upload-button blogCover" >{% if object.cover_image %}<img src="{{object.cover_image.url}}" class="blogItemPic" alt=""/>{% else %}<span class="largeFont">Upload a cover pic</span>{% endif %}</div>' +
+					'</div>',
+			fileTemplate: '<div class="progress progress-striped active"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">' +
+                '<span class="qq-upload-file"></span>' +
+				'<span class="qq-upload-size" style="display:none !important;"></span>' +
+                '<a class="qq-upload-cancel" href="#">Cancel</a>' +
+                '<span class="qq-upload-failed-text">Failed</span>' +
+            '</div></div>',
+            element: $('#uploadButton')[0],
+			listElement: $('.uploadedFilePanel2')[0],
+            multiple: false,
+			onSubmit: function(id, fileName){$('.uploadedFilePanel2').show();},
+            onComplete: function( id, fileName, responseJSON ) {
+              if( responseJSON.success )
+              {
+               $('div.blogCover').append('<img src="'+responseJSON.path+'" class="blogCoverImg" alt=""/>');
+               $('div.blogCover').find('span').remove();
+                $('div.blogCover').css('height','auto');
+			  if($('.uploadedFileUrl').length==0){
+			  $('.qq-upload-file').after('<input class="uploadedFileUrl" type="hidden" value="'+responseJSON.path+'"/>');}else{
+               $('.uploadedFileUrl').val(responseJSON.path);}
+			 if ($('.uploadedFilePanel2').find('div.alert').length==2){
+              $('.uploadedFilePanel2').find('div.alert').first().remove();}
+			   $('#img_url').val(responseJSON.path)
+			  }else{}},
+            params: {
+              'csrf_token': '{{ csrf_token }}',
+              'csrf_name': 'csrfmiddlewaretoken',
+              'csrf_xname': 'X-CSRFToken',
+            },
+          }) ;
+</script>
+{% endblock %}

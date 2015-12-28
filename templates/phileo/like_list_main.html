@@ -1,0 +1,13 @@
+{% load phileo_tags %}
+{% load activity_tags %}
+{% who_likes obj as obj_likes %}
+{% for like in obj_likes %}
+{% if like.sender.username != user.username %}
+    <div class="row clearfix likeListRow">
+	<div class="floatL" ><a href="{{like.sender.get_absolute_url}}"><img class="mugshotpic" src="{{ like.sender.get_profile.mugshot }}" alt=""/></a></div>
+	<a href="{{like.sender.get_absolute_url}}" class="floatL marginL"><b>{{ like.sender.username }}</b></a>
+	<button id = "" onclick="follow_people('{{like.sender.id}}',this);" class="{% if user|is_following:like.sender %}btn btn-sm btn-default floatR{% else %}btn btn-sm btn-success floatR{% endif %}">{% if user|is_following:like.sender %}Unfollow{% else %}Follow{%endif%}</button>
+	<input type="hidden" name = "like_sender" value="{{like.sender.username}}"/>
+	</div>
+{% endif %}
+{% endfor %}

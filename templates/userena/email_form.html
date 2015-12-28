@@ -1,0 +1,27 @@
+{% extends 'userena/profile_form.html' %}
+{% load url from future %}
+
+{% block title %}Change password{% endblock %}
+
+{% block postArea %}
+<div>
+<div class="panel panel-primary">
+<div class="panel-heading largeFont">Change your email</div>
+<form action="" method="post" id="email_change_form">
+    {% csrf_token %}
+	<div class="panel-body">
+	<div class="alert {% if form.errors %}alert-danger{% else%}alert-info{% endif %} largeFont">{% if form.errors %}{% for field in form%}{% for e in field.errors%}{{e}}{% endfor %}{% endfor %}{%else%}Note: Your email wont be updated until you confirm it{% endif %}</div>
+	<div class="row clearfix">
+	<div class="input-group floatL" >
+	<span class="input-group-addon">New email:</span>
+    <input id="id_email" class="form-control" name="email" type="text"></div>
+	</div>
+<div class="row clearfix marginT">
+	<button type="submit" id="updatePassword" class="btn btn-primary">Update email</button>
+</div>
+	</div>
+</form>
+</div>
+</div>
+{% endblock %}
+

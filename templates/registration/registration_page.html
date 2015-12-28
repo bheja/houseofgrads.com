@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+   <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	{% load static %}
+
+  {% load url from future %}
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap_non_resp.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+  {% block css %}
+  {% endblock %}
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+	<!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+	{% block icon %} {% endblock icon %}
+	<title>Register with HouseofGrads</title>
+	</head>
+  <body>
+  <div id="theme">
+	<div class="mainWrapper" style="height:700px;">
+
+    <div class="container">
+        <a href="/"><img src="{% static 'img/logo5.png'%}" class="socialPagelogo" alt="HouseofGrads"/></a>
+         <div style="margin-top:100px;">
+    <div class="panel panel-primary clearfix loginSection">
+            <div class="panel-heading"><h4>Register to get your free copy. We hate spamming too!</h4></div>
+			<div class="panel-body clearfix">
+			 <p id="errMsg3"></p>
+			 <div class="widthHalf floatL">
+				<form class="form-signin" name="registration_form" id= "registrationForm_download" method="post">{% csrf_token %}
+					<div class="clearfix">
+					<label for>Email:</label>
+					<input type="text" class="form-control" autofocus placeholder="Email" name="email">
+					</div>
+					<div class="clearfix marginT" style="">
+					<label for>Password:</label>
+					<input type="password" class="form-control" placeholder="Password" name="password1" id="password1">
+					</div>
+					<div class="clearfix marginT" style="">
+					<label for>Confirm password:</label>
+					<input type="password" class="form-control" placeholder="Confirm password" name="password2"></div>
+
+					<button class="btn btn-primary btn-primary-shopster marginT" id = "signupButton" type="submit">Register me</button>
+
+				</form>
+			</div>
+               <div class="widthHalf floatL">
+                  <div class="fbLogin"><a href="{% url 'social:begin' 'facebook' %}?flag=true" class="facebook_button btn btn-lg">
+    <span class="colorWhite">Register with facebook</span></a><div class="clearfix"></div>
+    <p class="colorGrey marginT">Don't worry, we will never post on your behalf.</p></div>
+               </div>
+			</div>
+
+
+
+    </div>
+
+</div>
+        <div id="feedBuildSocial"></div>
+    </div>
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+  <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/cookie.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/scrollbar.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/eldarion-ajax.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/validate.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/tooltipvalidate.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/endless-pagination.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/suggest.js' %}"></script>
+  <script type="text/javascript" src="{%static 'js/highlight.js'%}"></script>
+
+  {% block js %}
+  {% endblock %}
+ </div></div>
+  {% include 'base/footer.html' %}
+  </body></html>

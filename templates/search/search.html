@@ -1,0 +1,35 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% block postArea %}
+<div class="panel panel-default searchResultsPanel">
+        {% if query %}
+            <div class="panel-heading largeFont colorGrey"><b>Showing {{results.count}} results..</b></div>
+			<div id="SearchResult">
+			{% include 'search/search_paginate.html' %}
+			</div>
+		{% endif %}
+</div>
+{% endblock %}
+{% block newsFeed %}
+
+{% endblock %}
+         {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+{% block js %}
+<script type="text/javascript" src="{%static 'js/highlight.js'%}"></script>
+<script type="text/javascript">
+$.endlessPaginate({pageSelector: '#SearchResult', onCompleted: function(context, fragment){
+				 $('.highlightText').highlight('{{query}}');
+				 $('.searchResultHeading').tooltip();
+					$('.urltooltip').tooltip();
+				
+				}	
+});
+$(function(){
+$('.highlightText').highlight('{{query}}');
+$('#searchTextInput').prop('value','{{query}}');
+$('.searchResultHeading').tooltip();
+$('.urltooltip').tooltip();
+});	</script>
+{% endblock %}

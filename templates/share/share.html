@@ -1,0 +1,27 @@
+{% load static %}
+<div id="shareModal" class="modal fade" tabindex="-1" aria-hidden="true">
+			<div class="modal-content loginModalSizing customThreadModalSize">
+			<div class="bgDark">
+			<button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+			<h4 class="fontColor">Share</h4>
+			</div>
+			<div class="modal-body">
+			<form class="" action="/share/" id="shareForm" method="post">{% csrf_token %}
+				<div class="threadDesArea">
+				<textarea id="shareText" class="form-control" name='content' placeholder="" autofocus="none"></textarea>
+				
+				{{ post_form.date }}
+				
+				<div class="liveContainer2"></div>
+				</div>
+				<div class="postPanel row clearfix">
+				<div class="btn-group btn-group-sm floatR">
+				<button type="submit" id="submitShare" class="btn btn-primary"><b>Post</b></button>
+				</div>
+				<img src="{% static 'img/loading.gif' %}" class="loading hiding floatR marginT marginR"/>
+			<span class="glyphicon glyphicon-remove hiding colorGrey floatR pointer" title="close preview"></span>	
+				</div>
+			</form>
+			</div>
+			</div>
+</div>

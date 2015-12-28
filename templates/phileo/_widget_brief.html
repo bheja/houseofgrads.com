@@ -1,0 +1,10 @@
+<span class="phileoComment">
+ {% if can_like %}
+<a class="{% if liked %} btn btn-default smallFont ajax bgGreen {% else %}btn btn-default smallFont ajax{% endif %}" href="{{ like_url }}?t=b" data-method="post" data-replace-closest=".phileoComment" data-spinner="off" onmouseover="showtooltipfeed(this);" 
+ title="Good one">
+			<span class="glyphicon glyphicon-circle-arrow-up" style="font-size:12px;" title=""><span class="commentLikeCount">{% if like_count != 0 %}{{like_count}}{% endif %}</span></span></a>
+{% if liked %}
+
+{% endif %}
+{% endif %}
+</span>

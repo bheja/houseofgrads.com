@@ -1,0 +1,8 @@
+CS--- computer science
+EE---- Electronics and electrical
+ME-- mechanical engg
+ENG--- gate and engineering schools
+JNC --- jobs and career
+PSU---- gate and PSU
+CV ---- civil engg
+CH --- chem engg

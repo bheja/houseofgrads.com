@@ -1,0 +1,125 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% load comments %}
+{% load phileo_tags %}
+{% block title%}My Blogs{% endblock %}
+{% block postArea %}
+        <div>
+
+            <ul class="nav nav-tabs" id="blogTabs">
+                <li class="{% if flag == 'published'%}active{%endif%}"><a href="#publishedTab" id="publishTab" data-toggle="tab">Published</a></li>
+                <li class="{% if flag == 'drafts'%}active{%endif%}"><a href="#draftsTab" id="draftTab" data-toggle="tab">Saved Drafts</a></li>
+            </ul>
+            <div class="tab-content">
+            <div id="publishedTab" class="tab-pane fade {% if flag == 'published'%}in active{%endif%}">
+
+                {% for b in blogs %}
+                {% if b.published %}
+                <div class="blogItemWrapper clearfix">
+                    <div class="blogHeading">
+                        <h4 style="margin-bottom:10px;"><a href="{{b.get_absolute_url}}">{{b.title}}</a></h4>
+                        <span>by</span><span style="margin-left:5px;"><a target="_blank" class="colorBlue" href="{{b.author.get_absolute_url}}" ><b>{{b.author.username}}</b></a></span>
+                        <span>in</span><span class="label label-primary" style="margin-left:5px;font-size:11px;" ><a href="{{b.tag.get_absolute_url}}" style="color:#fff;">{{b.tag.tag}}</a></span>
+                        <span class="">· {{b.date}}</span>
+                    </div>
+                    <div class="blogPic marginT">
+                        {% if b.cover_image %}
+
+                       <a href="{{b.get_absolute_url}}"><img class="blogItemPic" src="{{b.cover_image.url}}"/></a>
+                        {%else%}
+                        <p class="largeFont blogContent wordBreak" id="blogPubSnap{{forloop.counter}}">{{b.blog_content|truncatechars:300}}</p>
+                        {% endif %}
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="commentBox" style="margin-left:0;padding:7px;">
+		 	        <div class="postStatBox clearfix">
+			        {% phileo_widget user b %}
+			        <div class="floatR">
+                        <span class="glyphicon glyphicon-comment colorGrey"></span>
+                        {% get_comment_count for blogs.blog b.id as count %}
+                        <span class="">{{count}}</span>
+                         <span class="marginL"><a href="{{b.get_absolute_url}}" class="colorBlue"><b>Read blog </b><span class="glyphicon glyphicon-chevron-right"></span></a></span>
+			        </div>
+                    </div>
+                   </div>
+                </div>   <hr/>
+                {% endif %}
+                <script type="text/javascript">
+                var a = document.getElementById('blogPubSnap{{forloop.counter}}');
+                var b = a.innerText || a.textContent;
+                a.innerHTML = b;
+                                </script>
+                {% endfor %}
+
+            </div>
+            <div id="draftsTab" class="tab-pane fade {% if flag == 'drafts'%}in active{%endif%}">
+
+                {% for b in blogs %}
+                 {% if not b.published %}
+                <div class="blogItemWrapper clearfix">
+                    <div class="blogHeading">
+                        <h4 style="margin-bottom:10px;"><a href="/blogs/edit/{{b.id}}/drafts/">{{b.title}}</a></h4>
+                        <span>by</span><span style="margin-left:5px;"><a target="_blank" class="colorBlue" href="{{b.author.get_absolute_url}}" ><b>{{b.author.username}}</b></a></span>
+                        <span class="">· Last edited · {{b.date}}</span>
+                    </div>
+                    <div class="blogPic marginT">
+                        {% if b.cover_image %}
+
+                       <a href="/blogs/edit/{{b.id}}/drafts/" ><img class="blogItemPic" src="{{b.cover_image.url}}"/></a>
+                        {%else%}
+                        <p class="largeFont blogContent wordBreak" id="blogSnap{{forloop.counter}}">{{b.blog_content|truncatechars:300}}</p>
+                        {% endif %}
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="commentBox" style="margin-left:0;padding:7px;">
+		 	        <div class="postStatBox clearfix">
+                        <span class="marginL"><a href="/blogs/edit/{{b.id}}/drafts/" class="colorBlue"><b>Continue Editing</b>
+                            <span style="margin-left:5px;" class="glyphicon glyphicon-pencil"></span></a></span>
+			        </div>
+                    </div>
+                   </div>
+                <hr/>
+                 {% endif %}
+<script type="text/javascript">
+                var a = document.getElementById('blogSnap{{forloop.counter}}');
+                var b = a.innerText || a.textContent;
+                a.innerHTML = b;
+                                </script>
+                {% endfor %}
+                </div>
+
+
+            </div>
+ </div>
+
+ {% endblock%}
+{% block newsFeed %}
+ {% endblock%}
+        {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+{% block js %}
+        <script type="text/javascript">
+           window.onload = function(){blog_details_init();}
+            var stickyTop = $('#sideMenu').offset().top; // returns number
+
+	$(window).scroll(function(){ // scroll event
+
+    var windowTop = $(window).scrollTop(); // returns number
+
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+
+	}
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+
+    }
+  });
+  $('#blogTabs a').click(function(e){$(this).tab('show');});
+ {% if flag == 'drafts'%}$('#draftTab').tab('show');{% else %}$('#publishTab').tab('show');{% endif %}
+
+        </script>
+{% endblock %}

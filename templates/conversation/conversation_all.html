@@ -1,0 +1,24 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% block title%}Conversations{% endblock %}
+{% block postArea %}
+        <div>
+            <h4 style="margin-bottom:10px;color:#555;">Conversations</h4>
+            <div class="panel panel-default" id="conversationList">
+            {% include 'conversation/conversation_all_list.html' %}
+            </div>
+        </div>
+{% endblock %}
+{% block newsFeed %}
+{% endblock %}
+         {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+{% block js %}
+<script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript">
+$.endlessPaginate({paginateOnScroll: true,  paginateOnScrollChunkSize: 5, paginateOnScrollMargin: 1});
+$('a.deleteConvLink').popover({
+    html:true,placement:'bottom'});
+</script>
+{% endblock %}

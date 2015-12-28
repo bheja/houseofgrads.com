@@ -1,0 +1,49 @@
+<footer>
+       <div class="footer">
+           <div class="footernav clearfix">
+               <div class="row col-lg-6">
+               <h4>Discussions</h4>
+
+						<ul class="list-unstyled col-lg-6">
+                        <li><a href="/discussions/enggschools/">GATE and Engineering Schools</a></li>
+						<li><a href="/discussions/gatenpsu/">GATE and PSUs</a></li>
+                        <li><a href="/discussions/gatecs/">GATE-CS Prep</a></li>
+                        <li><a href="/discussions/gateec/">GATE-EC Prep</a></li>
+						</ul>
+
+						<ul class="list-unstyled col-lg-6">
+						<li><a href="/discussions/gatemech/">GATE-Mechanical Prep</a></li>
+                        <li><a href="/discussions/gatechem/">GATE-Chemical Prep</a></li>
+                        <li><a href="/discussions/gatecivil/">GATE-Civil Prep</a></li>
+						<li><a href="/discussions/jobsncareer/">Jobs and career related</a></li>
+						</ul>
+						</div>
+               <div class="row col-lg-3">
+                <h4>Blogs</h4>
+						<ul class="list-unstyled">
+							<li><a href="/blogs/topics/all/">Browse by topics</a></li>
+							<li><a href="/blogs/topics/editorpicks/">Editor picks</a></li>
+                            <li><a href="/blogs/topics/latest/">Latest</a></li>
+							<li><a href="{% if user.is_authenticated %}/create/blog/draft/{%else%}#{% endif %}"
+                            {% if not user.is_authenticated %}data-toggle="modal" data-target="#loginModal"{%endif%}>+ Write a new blog</a></li>
+                            {% if user.is_authenticated %}<li><a href="/blogs/all/published/">My blogs</a></li>{% endif %}
+						</ul>
+
+                   </div>
+               <div class="row col-lg-3">
+                   <h4>About</h4>
+                   <ul class="list-unstyled">
+                       <li> <a href="/houseofgrads/contactus/" class="">Contact us</a></li>
+							<li> <a href="/houseofgrads/aboutus/" class="">About us</a></li>
+                            <li><a href="/houseofgrads/feedback/" class="">Feedback</a></li>
+                       <li> <a href="/houseofgrads/privacy/" class="">Terms & privacy</a></li>
+
+                   </ul>
+               </div>
+
+           </div>
+           <div class="footernotice">
+           <span style="color:#777;">&copy; 2014 HouseofGrads LLP</span>
+           </div>
+       </div>
+</footer>

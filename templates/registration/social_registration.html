@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+   <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	{% load static %}
+
+  {% load url from future %}
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap_non_resp.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+  {% block css %}
+  {% endblock %}
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+	<!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+	{% block icon %} {% endblock icon %}
+	<title>Almost done!</title>
+	</head>
+  <body>
+  <div id="theme">
+      <input type="hidden" value="{{flag}}" id="flagVal">
+	<div class="mainWrapper">
+
+    <div class="container" style="min-height:700px;">
+        <a href="/"><img src="{% static 'img/logo5.png'%}" class="socialPagelogo" alt="HouseofGrads"/></a>
+         <div style="margin-top:30px;">
+    <div class="panel panel-primary clearfix loginSection">
+        <div class="panel-heading largeFont">Thanks for signing up, please choose your GATE stream...</div>
+        <div class="panel-body">
+
+		<div id="ajaxwrapper">
+			<div class="input-group floatL" style="width:70%;">
+				<span class="input-group-addon">GATE stream:</span>
+				<select id ="profileStreamSelectSocial" class="form-control floatL" name="gate_stream">
+					<option value="" selected="selected">Please select..</option>
+					<option value="CS">Computer Science and Information Technology</option>
+                    <option value="EC">Electronics Engineering</option>
+					<option value="EE">Electrical Engineering</option>
+					<option value="ME">Mechanical Engineering</option>
+					<option value="CH">Chemical Engineering</option>
+					<option value="CV">Civil Engineering</option>
+				</select>
+				</div>
+        <div class="clearfix"></div>
+        <div class="marginB marginT" id="sendwrapper">
+		<button class="btn btn-primary" onclick="update_stream_social();" id="">{% if flag|stringformat:'s' == 'true'%}Download and Save{% else%}Save{% endif %}</button>
+		</div>
+      </div>
+
+        </div>
+
+    </div>
+
+</div>
+        <div id="feedBuildSocial"></div>
+    </div>
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+  <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/cookie.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/scrollbar.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/eldarion-ajax.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/validate.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/tooltipvalidate.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/endless-pagination.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/suggest.js' %}"></script>
+  <script type="text/javascript" src="{%static 'js/highlight.js'%}"></script>
+
+  {% block js %}
+
+  {% endblock %}
+ </div></div>
+  {% include 'base/footer.html' %}
+  </body></html>

@@ -1,0 +1,34 @@
+{% load static %}
+<div id="registerModal" class="modal fade" tabindex="-1" aria-hidden="true">
+			<div class="modal-content loginModalSizing">
+			<div class="bgDark">
+			<button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+			<h4 class="fontColor">Register me on HouseofGrads</h4>
+			</div>
+			<div class="modal-body clearfix">
+			 <p id="errMsg3"></p>
+			 <div class="widthHalf floatL">
+				<form class="form-signin" name="registration_form" id= "registrationForm" action="" method="post">{% csrf_token %}
+					<div class="clearfix">
+					<label for>Email:</label>
+					<input type="text" class="form-control" autofocus placeholder="Email" name="email">
+					</div>
+					<div class="clearfix marginT" style="">
+					<label for>Password:</label>
+					<input type="password" class="form-control" placeholder="Password" name="password1" id="password1">
+					</div>
+					<div class="clearfix marginT" style="">
+					<label for>Confirm password:</label>
+					<input type="password" class="form-control" placeholder="Confirm password" name="password2"></div>
+					<button class="btn btn-primary btn-primary-shopster marginT" id = "signupButton" type="submit">Register me</button>
+					<button class="btn btn-default btn-secondary-shopster floatR marginT" type="submit" data-dismiss="modal">Close</button>
+				</form>
+			</div>
+               <div class="widthHalf floatL">
+                  <div class="fbLogin"><a href="{% url 'social:begin' 'facebook' %}?next={% if request.path == '/'%}/home/{%else%}{{request.path}}{% endif %}" class="facebook_button btn btn-lg">
+    <span class="colorWhite">Login with facebook</span></a><div class="clearfix"></div>
+    <p class="colorGrey marginT">Don't worry, we will never post on your behalf.</p></div>
+               </div>
+			</div>
+			</div>
+			</div>

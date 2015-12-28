@@ -1,0 +1,43 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% load comments %}
+{% load phileo_tags %}
+{% block title%}{{topic.tag}}{% endblock %}
+{% block postArea %}
+<div>
+      <div class="largeFont discussionContainer"><h3 class="marginTZero">{{topic.tag}}</h3>
+      <p class="marginT"> <span class="glyphicon glyphicon-list-alt largeFont colorBlue"></span><span class="largeFont" style="margin-left:3px;">{{topic.no_blogs}} blogs</span>
+      </p>
+		</div>
+    <div id="blogListTopic">
+        {% include 'blogs/by_topics_paginate.html' %}
+</div>
+</div>
+ {% endblock%}
+{% block newsFeed %}
+
+ {% endblock%}
+{% block js %}
+        <script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript">
+window.onload = function(){blog_details_init();}
+var stickyTop = $('#sideMenu').offset().top; // returns number
+
+	$(window).scroll(function(){ // scroll event
+
+    var windowTop = $(window).scrollTop(); // returns number
+
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+
+	}
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+
+    }
+  });
+ $('#blogListTopic').endlessPaginate();
+</script>
+{% endblock %}

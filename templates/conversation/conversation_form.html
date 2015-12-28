@@ -1,0 +1,81 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% load humanize %}
+{% block postArea %}
+<div>
+<form class="form-inline" id="messageForm2" method="post" action=".">
+    {% csrf_token %}
+    {% if content_object %}
+        <h3>{{ content_object }}</h3>
+    {% endif %}
+	
+    {% if object.pk %}
+	<div class="panel panel-default msgPanel">
+	<div class="panel-heading"><b>
+	{% with total=object.users.all.count %}
+	{% if total <= 3 %}
+        {% for user in object.users.all %}
+		<a href="{{user.get_absolute_url}}" class="largeFont conversationLinks">
+		{% if not forloop.last %}{{ user.username }}, {% else %}{{user.username}}{% endif%}</a> 
+		{% endfor %}
+	{% else %}
+	   {% for user in object.users.all|slice:":3" %}
+		<a href="{{user.get_absolute_url}}" class="largeFont conversationLinks">
+		{% if not forloop.last %}{{ user.username }}, {% else %}{{user.username}}</a><span class="conversationLinks largeFont">...and</span>
+		<a href="#" data-toggle="modal" class="largeFont conversationLinks" data-target="#userListConv" onclick="fetch_user_list();">{{total|add:"-3"}} more{% endif%}</a>  
+	   {% endfor %}
+	 {% endif %}
+	 {% endwith %}
+	</b></div>
+    
+    {% endif %}
+	<div id="messageBox"><div>
+        {% include 'conversation/latest_message_main.html' %}
+        </div></div>
+	</div>
+	<div class="postArea smallFont">
+	{% for field in form %}		
+        {{ field }}
+	{% endfor %}
+	</div>
+	<div class="postPanel row clearfix ">
+	<div class="btn-group btn-group-sm floatR">
+		<button type="button" onclick="formSubmitConv()" id="submitMsg2" class="btn btn-primary"><b>Send</b></button>
+	</div>
+    </div>
+</form>
+</div>
+{% include 'conversation/conversation_user_list.html' %}
+
+{% endblock %}
+{% block newsFeed %}
+
+{% endblock %}
+ {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+{% block js %}
+<script type="text/javascript">
+var stickyTop = $('#sideMenu').offset().top; // returns number 
+ 
+	$(window).scroll(function(){ // scroll event  
+ 
+    var windowTop = $(window).scrollTop(); // returns number
+ 
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+	
+	}
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+	  
+    } 
+  });
+ var a = $('#messageBox').height();var b= $('#messageBox > div').height();
+ $('#messageBox').scrollTop(b-a);
+ $('.msgPanel').perfectScrollbar();
+ $('#messageBox').endlessPaginate({divLatMessageList: true, paginateOnScrollMargin: 1});
+	</script>
+{% endblock %}

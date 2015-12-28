@@ -1,0 +1,36 @@
+{% load url from future %}
+{% load humanize %}
+{% load endless %}
+{% lazy_paginate conversation_list %}
+
+{% for conversation in conversation_list %}
+<li style="font-size:12px; cursor:pointer;" class="{% if not request.user in conversation.read_by.all %}clearfix unread{% else %}clearfix{% endif %}" onclick="parent.location='/messages/{{conversation.pk}}/'">
+ <div class="row messageMenuRow clearfix">
+       <div><img class="commentMugshot" src="{{ conversation.latest_message.user.get_profile.mugshot }}" alt=""/></div>
+			  <div><div><b>{% with total=conversation.users.all.count %}
+	{% if total <= 3 %}
+        {% for user in conversation.users.all %}
+		<span class="conversationLinks">
+		{% if not forloop.last %}{{ user.username }}, {% else %}{{user.username}}{% endif%}</span>
+		{% endfor %}
+	{% else %}
+	   {% for user in conversation.users.all|slice:":3" %}
+		<span class="conversationLinks">
+		{% if not forloop.last %}{{ user.username }}, {% else %}{{user.username}}</span><span class="conversationLinks">...and</span>
+		<span class="conversationLinks">{{total|add:"-3"}} more{% endif%}</span>
+	   {% endfor %}
+	 {% endif %}
+	 {% endwith %}</b>
+					{% if not request.user in conversation.read_by.all %} <span class="badge floatR messageNotify" style="font-size:9px;"> </span>{% endif %}
+				</div>
+				<div>
+				<span id="msgTextNotify{{forloop.counter}}" class="msgTxtNotify">{{ conversation.latest_message.text }}</span>
+				</div>
+				<div>
+				<span class="timestampText">{{ conversation.latest_message_date|naturaltime }}</span>
+				</div>
+				</div>
+           </div>
+</li>
+{% endfor %}
+{% show_more %}

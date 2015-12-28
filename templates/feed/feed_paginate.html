@@ -1,0 +1,212 @@
+{% load static %}
+{% load humanize %}
+{% load url from future %}
+{% load activity_tags %}
+{% load phileo_tags %}
+{% load comments %}
+{% load endless %}
+{% lazy_paginate action_list %}
+{% for action in action_list %}
+{% if action.verb|stringformat:"s" != 'created a thread' %}
+	<div id="" class="newsFeedWrapper clearfix" onmouseover="showoptionfeed(this);" onmouseout="hideoptionfeed(this);">
+		<div class="clearfix floatL" style="width:8%;"><a href="{{action.actor.get_absolute_url}}">
+		<img class="mugshotpic" src="{{ action.actor.get_profile.mugshot }}" alt=""/></a>
+		
+		</div>
+		<div class="newsFeedItem">
+		
+			<a href="{{action.actor.get_absolute_url}}" class="actorUser"><b>{{action.actor}}</b></a>
+			
+		{% if action.action_object %}
+			{% if action.target|stringformat:"s" != "myWall" %}
+			<span class="newsFeedItemText">{{ action.verb }}</span>
+				<a href="{{action.target.get_absolute_url}}"><b>{{ action.target|truncatechars:60 }}</b></a>
+				{% endif %}
+			{% if profile.user %}
+			{% if profile.user.username == user.username %}
+			<a href="javascript:void(0);" class="hiding floatR deleteLink colorGrey" data-content="<a href='javascript:void(0);' onclick = 'delete_post({{action.action_object.id}},this)' class='deleteItem colorGrey'>Delete</a>">
+                <span class="glyphicon glyphicon-remove"></span></a>
+			{% else %}
+            <a href="javascript:void(0);" class="hiding floatR deleteLink colorGrey" data-content='<a href="javascript:void(0);" onclick = "report_post({{action.action_object.id}},this)" class="deleteItem colorGrey">Report</a>' title="report this item">
+                <span class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+			{% else %}
+            {% if action.action_object.author.username == user.username %}
+			<a href="javascript:void(0);" class="hiding floatR deleteLink colorGrey" data-content='<a href="javascript:void(0);" onclick = "delete_post({{action.action_object.id}},this)" class="deleteItem colorGrey">Delete</a>'><span class="glyphicon glyphicon-remove"></span></a>
+			{%else%}
+            <a href="javascript:void(0);" class="hiding floatR deleteLink colorGrey" data-content='<a href="javascript:void(0);" onclick = "report_post({{action.action_object.id}},this)" class="deleteItem colorGrey">Report</a>'><span class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+            {% endif %}
+			<a href="/postdetail/{{action.action_object.id}}/" target="_blank" class="hiding floatR marginR" title="open this item"><span class="glyphicon glyphicon-plus"></span></a>
+			
+			<div class="clearfix"></div>
+				<span class="timestampText">{{ action.timestamp|naturaltime }}</span><span class="timestampText"> </span>
+		<div class="contentNewsFeed"><span class="feedText" id="feedText{{forloop.counter}}{% show_current_number %}" >{% autoescape off %}{{action.action_object.content}}{% endautoescape %}</span>{% if action.action_object.previewurl %}<div class="previewContains" id="previewContains{{forloop.counter}}{% show_current_number %}">{% autoescape off %}{{action.action_object.previewurl}}{% endautoescape %}</div>{% endif %}
+		{% if action.action_object.image.all %}
+		<div class="imagePanel clearfix marginT">
+			{% for img in action.action_object.image.all %}
+			<a href="" class="imageModalLink floatL" onclick="get_image(this)" data-target="#imageModal" data-toggle="modal" ><img src="{{img}}" alt="" class="postImage floatL"/></a>
+			{% endfor%}
+		</div>
+		{% endif %}
+		</div>
+		</div>
+		<div class="clearfix"></div>
+		 <div class="commentBox" >
+		 	<div class="postStatBox clearfix">
+			{% if action.verb|stringformat:"s" != 'created a thread' %}
+			{%if action.action_object %}{% phileo_widget user action.action_object %}{% else %}{% phileo_widget user action.target %}{% endif %}
+			{% endif %}
+			</div>
+		 
+			{% if action.action_object %}
+				{% if user.is_authenticated %}
+				{% get_comment_form for posts.createpost action.action_object.id as comm_form %}
+				{{ comm_form.content_type }}
+				{{ comm_form.object_pk }}
+				{{ comm_form.timestamp }}
+				{{ comm_form.security_hash }}
+				<input type="hidden" value='{{ csrf_token }}'id='id_csrf{{forloop.counter}}' />
+				{% endif %}
+				{% get_comment_count for posts.createpost action.action_object.id as count %}
+				 {% if count = 0 or count = 1 or count = 2 %} 
+						{% get_comment_list for posts.createpost action.action_object.id as comment_list %}
+							<div class="parentCommentList">
+
+							<hr>
+							{% for comment in comment_list %}
+								
+									<div class="commentList clearfix">
+									
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.mugshot }}" class="commentMugshot"/></a>
+									</div>
+									
+									<div class="commentBody"> 
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt" id="commentTxt{{forloop.parentloop.counter}}{{forloop.counter}}">{% autoescape off %}{{comment.comment}}{% endautoescape %}</span></span>
+
+                                    </div>
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% phileo_widget_brief request.user comment %}
+                                        <span> · </span>{% if comment.user == request.user or action.action_object.author == request.user %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'delete_comment({{comment.id}},this)'>Delete</a>" class="deleteCommentLink colorGrey">Delete</a>
+                                        {% else %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'report_comment({{comment.id}},this)'>Report</a>" class="reportCommentLink colorGrey">Report</a>
+                                        <input type="hidden" id="id_content_obj" value="{{action.action_object.id}}">
+                                        {% endif %}
+									</div>
+									
+									</div>
+								
+							{% endfor %}
+							</div>
+							{% if user.is_authenticated %}
+							<div class="commentForm clearfix input-group-sm marginT">
+							<textarea id = "id_comment{{forloop.counter}}{% show_current_number %}" onfocus="tinyMCEcomm(this);" class="commentArea form-control noResize"  placeholder="Write a comment..." required></textarea>
+							<div class="clearfix"></div>
+							<div class="btn-group btn-group-sm floatR marginT hiding">
+							<button type="submit"  class=" commentSubmit btn btn-default" {% if user.is_active %}onclick="postComm(this);"{%else%}onclick="actch(event);"{%endif%}>
+							<b>Comment</b></button>
+							</div>
+							<input type="hidden" value="" class="tagElement"/>
+							</div>
+							{% endif %}
+				{% else %}
+
+					<!-- <div class="parentCommentList">
+					</div> -->
+					 {% get_comment_list for posts.createpost action.action_object.id as comment_list %}
+					 <hr>
+							<a href="javascript:void(0)" class="marginT" onclick="getCommentList(this,{{action.action_object.id}})">View previous comments({{count|add:"-2"}})</a>
+							<div class="parentCommentList marginT">
+
+							{% for comment in comment_list|slice:"-2:"  %}
+
+									<div class="commentList clearfix">
+
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.mugshot }}" class="commentMugshot"/></a>
+									</div>
+									<div class="commentBody">
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt" id="commentTxt{{forloop.parentloop.counter}}{{forloop.counter}}">{% autoescape off%}{{ comment.comment}}{% endautoescape %}</span></span>
+
+                                    </div>
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% phileo_widget_brief request.user comment %}
+                                        <span> · </span>{% if comment.user == request.user or action.action_object.author == request.user %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'delete_comment({{comment.id}},this)'>Delete</a>" class="deleteCommentLink colorGrey">Delete</a>
+                                        {% else %}
+                                        <a href="javascript:void(0);" data-content="<a href='javascript:void(0);' onclick = 'report_comment({{comment.id}},this)'>Report</a>" class="reportCommentLink colorGrey">Report</a>
+                                        <input type="hidden" id="id_content_obj" value="{{action.action_object.id}}">
+                                        {% endif %}
+									</div>
+
+									</div>
+
+							{% endfor %}
+							</div>
+					{% if user.is_authenticated %}
+
+					<div class="clearfix commentForm input-group-sm marginT">
+					<textarea id = "id_comment{{forloop.counter}}{% show_current_number %}" onfocus="tinyMCEcomm(this);" class="commentArea form-control noResize"  placeholder="Write a comment..." required></textarea>
+					<div class="btn-group btn-group-sm floatR hiding marginT">
+							<button type="submit"  class="commentSubmit btn btn-default" {% if user.is_active %}onclick="postComm(this);"{%else%}onclick="actch(event);"{%endif%}>
+							<b>Comment</b></button>
+							</div>
+					<input type="hidden" value="" class="tagElement"/>
+					</div>
+					{% endif %}
+				{% endif %}
+
+			{% endif %}
+            {% endif %}
+			</div>
+		
+			<script type="text/javascript">
+			var e1 = document.getElementById('id_content_type');
+			var e3 = document.getElementById('id_timestamp'); 
+			var e2 = document.getElementById('id_object_pk'); 
+			var e4 = document.getElementById('id_security_hash');  
+			e1.id = 'id_ctype{{forloop.counter}}';
+			e2.id = 'id_opk{{forloop.counter}}';
+			e3.id = 'id_timestamp{{forloop.counter}}';
+			e4.id = 'id_sh{{forloop.counter}}';
+
+			</script>
+    <hr>
+		</div>
+{% else %}
+<div class="newsFeedWrapper clearfix" onmouseover="showoptionfeed(this);" onmouseout="hideoptionfeed(this);">
+		<div class="clearfix floatL" style="width:8%;"><a href="{{action.actor.get_absolute_url}}"><img class="mugshotpic" src="{{ action.actor.get_profile.mugshot }}" alt=""/></a></div>
+		<div class="newsFeedItem">
+		
+			<a href="{{action.actor.get_absolute_url}}" class="actorUser"><b>{{action.actor}}</b></a>
+			
+			<span class="newsFeedItemText">{{ action.verb }}</span>
+				<a href="{{action.action_object.get_absolute_url}}"><b>{{ action.action_object.name|truncatechars:60 }}</b></a>
+			<a href="{{action.action_object.get_absolute_url}}" target="_blank" class="hiding floatR marginR" title="open this item"><span class="glyphicon glyphicon-plus"></span></a>
+			
+			<div class="clearfix"></div>
+				<span class="timestampText clearfix">{{ action.timestamp|naturaltime }}</span><span class="timestampText"> </span>
+		
+		</div>
+		
+		 <div class="commentBox floatR" style="margin-top:10px;margin-left:0;width:90%;">
+		 <div class="contentNewsFeed"><span class="feedText" id="feedText{{forloop.counter}}{% show_current_number %}">{% autoescape off %}{{action.action_object.brief}}{% endautoescape %}</span></div>
+		 	<hr>
+			<div class="postStatBox clearfix">
+			{% phileo_widget user action.action_object %}
+			
+			</div>
+		 </div>
+
+		</div>
+		<hr/>
+{% endif %}
+
+{% endfor %}
+{% show_more %}

@@ -1,0 +1,135 @@
+{% extends 'base/base.html' %}
+{% block title %}Get in touch{% endblock %}
+{% block bodyContent %}
+<div class="container">
+    <div style="margin-top:60px;height:100%;">
+    <div class="col-lg-1">
+
+    </div>
+    <div class="col-lg-10" style="height:600px;">
+        <ul class="nav nav-tabs" id="contactusTabs">
+                <li class="{% if flag == 'contactus'%}active{%endif%}"><a href="#contactTab" id="contact" data-toggle="tab">Contact us</a></li>
+                <li class="{% if flag == 'aboutus'%}active{%endif%}"><a href="#aboutTab" id="about" data-toggle="tab">About us</a></li>
+                 <li class="{% if flag == 'feedback'%}active{%endif%}"><a href="#feedbackTab" id="feedback" data-toggle="tab">Feedback</a></li>
+                <li class="{% if flag == 'privacy'%}active{%endif%}"><a href="#privacyTab" id="privacy" data-toggle="tab">Terms & Privacy</a></li>
+        </ul>
+            <div class="tab-content">
+                <div id="contactTab" class="tab-pane fade {% if flag == 'contactus' %}in active{%endif%} marginT">
+                  <div class="panel panel-success">
+                      <div class="panel-heading largeFont">
+                          <b>We would love to hear from you</b>
+                      </div>
+                      <div class="panel-body largeFont">
+                          <p>
+                              You can mail us anytime at <a href="mailto:info@houseofgrads.com" class="colorBlue" target="_top">info@houseofgrads.com</a>. For specific requests please refer to the mail addresses given below :
+
+                          </p>
+                          <ul>
+                              <li>For bugs and other technical issues: <a href="mailto:report@houseofgrads.com" class="colorBlue" target="_top">report@houseofgrads.com</a></li>
+                              <li>For requesting removal of a content: <a href="mailto:moderate@houseofgrads.com" class="colorBlue" target="_top">moderate@houseofgrads.com</a></li>
+                              <li>For requesting moderator status: <a href="mailto:moderate@houseofgrads.com" class="colorBlue" target="_top">moderate@houseofgrads.com</a></li>
+                          </ul>
+                      </div>
+                  </div>
+                   </div>
+                <div id="aboutTab" class="tab-pane fade {% if flag == 'aboutus'%}in active{%endif%} marginT">
+                    <p class="largeFont">HouseofGrads.com is an online community for students preparing for the GATE exam.
+You can post questions & answers, share experiences,and learn from the vast repository of questions discussed by your peers.
+So come on board and get a step closer to realizing your dream GATE score!</p>
+                   </div>
+                <div id="feedbackTab" class="tab-pane fade {% if flag == 'feedback'%}in active{%endif%} marginT">
+                    {% if success or error %}
+                    {% if success %}
+                    <div class="alert alert-success">
+                        <b>We appreciate it.</b> Thanks a lot for reporting an issue to us. We will try our best to fix it.
+                    </div>
+                    {% else %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+                      {% endif %}
+                         <div class="panel panel-success">
+                      <div class="panel-heading largeFont">
+                          <b>Report a problem</b>
+                      </div>
+                      <form id="feedBackForm" enctype="multipart/form-data" action="" method="post">{% csrf_token %}
+                      <div class="panel-body largeFont">
+                          <div class="row">
+                             We try our best to keep houseofgrads.com bug free and to provide seamless user experience.
+                             However, no one is perfect and you can help us build a better GATE community by reporting issues.
+                          </div>
+                           <div class="row">
+                          <div class="input-group largeFont" style="width:95%;"><label for>Description of the issue</label>
+                          <textarea class="form-control descTextBox marginT noResize" style="height:100px;" placeholder="Details make bug fixing easier..." name="description"></textarea>
+                              </div></div>
+
+                          <div class="row">
+                          <p>This issue is in:</p>
+                          <input type="radio" value="feed" id="cat1" name="category"/><label for="cat1">Feed</label>
+                          <input type="radio" value="messages" class="marginL" id="cat2" name="category"/><label for="cat2">Messages</label>
+                          <input type="radio" value="notifications" class="marginL" id="cat3" name="category"/><label for="cat3">Notifications</label>
+                          <input type="radio" value="blogs" id="cat4" class="marginL" name="category"/><label for="cat4">Blogs</label>
+                          <input type="radio" value="search" id="cat5" class="marginL" name="category"/><label for="cat5">Search</label>
+                          <input type="radio" value="discussions" id="cat6" class="marginL" name="category"/><label for="cat6">Discussions</label>
+                          <input type="radio" value="other" id="cat7" class="marginL" name="category"/><label for="cat7">Other</label></div>
+                          <div class="row">
+                         <div id="fileUpload" class="btn btn-default">
+                            + Upload screenshot</div>
+                           <input type="file" id="uploadElem" class="" name="images" multiple></div>
+
+                          <div class="row">
+                      <button type="submit" class="btn btn-success">Report</button></div></div>
+                      </form>
+
+                         </div>
+
+                </div>
+                <div id="privacyTab" class="tab-pane fade {% if flag == 'privacy' %}in active{%endif%} marginT">
+                  <div class="panel panel-success">
+                      <div class="panel-heading largeFont">
+                          <b>Terms of Service and Privacy Policies</b>
+                      </div>
+                      <div class="panel-body largeFont">
+                          <p>
+                                We recognize that your privacy is very important and take it seriously.We will not use or share your information with anyone except as described in this Privacy Policy. This Privacy Policy does not apply to information we collect by other means (including offline) or from other sources.
+
+You provide us information about yourself, such as your name and e-mail address, if you register for a member account with the website. Your name and other information you choose to add to your profile will be  viewed by other registered memebers on the website.  We may use your email address to send you website-related notices (including any notices required by law, in lieu of communication by postal mail).
+
+We use automated technologies to collect and analyze certain types of information we consider to be non-personal information, including:
+                              <br>(a) information related to the devices or browsers you use to access or interact with the Service, such as: IP addresses, geolocation information, unique device identifiers and other information about your mobile phone or other mobile device(s), browser types, browser language, and unique numbers or codes in cookies; and
+                              <br>(b) information related to the ways in which you interact with the website, such as: referring and exit pages and URLs, platform type, the number of clicks, domain names, landing pages, pages viewed and the order of those pages, the amount of time spent on particular pages, the date and time you used the website, and other similar information. We may also capture other data, such as search criteria and results.
+<br>Houseofgrads may allow third parties to serve advertisements on the webiste and on third-party services and use other third parties to help us collect and analyze information about your use of the service, generate aggregate site usage statistics and provide content sharing services to support the Service. These third parties may also use cookies and similar technologies to collect similar non-personal information about your use of the Service. HouseofGrads does not control the third parties' use of such technologies and their use is governed by those parties' privacy policies.
+
+The site contains user hosted content and Houseofgrads.com is not responsible for the quality and accuracy of the information posted.
+
+However, we have administrators who continuously view the hosted content and assess its quality, to make houseofgrads as error free as possible
+Moreover, we have provided options to the users themeselves to mark content that is inappropriate or incorrect to maintain the quality of the website.
+
+HouseofGrads is a discussion platform where users may post questions to be discussed, we are not responsible for any infringement of copyrights associated with the questions. However we hereby, discourage our users from posting copyrighted content.
+                          </p>
+
+                      </div>
+                  </div>
+                   </div>
+            </div>
+    </div>
+    <div class="col-lg-1">
+
+    </div>
+        </div>
+</div>
+{% include 'base/footer.html' %}
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+     $('#contactusTabs a').click(function(e){$(this).tab('show');});
+ {% if flag == 'contactus' %}$('#contactTab').tab('show');{% elif flag == 'aboutus' %}$('#aboutTab').tab('show');{% else %}$('#feedbackTab').tab('show');{% endif %}
+$('#uploadElem').change(function(){
+var filen = $(this).val();
+filen = filen.substring(filen.lastIndexOf('\\')+1);
+$('#fileUpload').text(filen);
+});
+$('#fileUpload').click(function(){$('#uploadElem').click();});
+</script>
+{% endblock %}

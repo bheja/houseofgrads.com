@@ -1,0 +1,13 @@
+<div id="inActiveModal" class="modal fade in" tabindex="-1" aria-hidden="true">
+	<div class="modal-content loginModalSizing">
+	 <div class="bgDark">
+	 <button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+	 <h4 class="fontColor">HouseofGrads</h4>
+	 </div>
+	  <div class="modal-body">
+		<div class="alert alert-danger largeFont">Sorry! Your account is not yet activated. Please confirm your email <b>{{user.email}}</b> to be able to post and share on HouseOfGrads.com
+        Not received confirmation mail? <a class="boldText colorRed" href="javascript:void(0);" onclick="resend_activate_mail('{{user.username}}');">Resend</a> activation mail.
+        </div>
+	  </div>
+	</div>
+	</div>

@@ -1,0 +1,42 @@
+{% load url from future %}
+{% load humanize %}
+{% load endless %}
+{% lazy_paginate conversation_list %}
+
+{% for conversation in conversation_list %}
+<div style="font-size:12px; cursor:pointer;" class="{% if not request.user in conversation.read_by.all %}clearfix unread{% else %}clearfix{% endif %} panel-body " onclick="parent.location='/messages/{{conversation.id}}/'" >
+ <div class="row messageMenuRow clearfix" onmouseover="showoptionfeed(this);" onmouseout="hideoptionfeed(this);">
+       <div style="width:7%;"><img class="commentMugshot" src="{{ conversation.latest_message.user.get_profile.mugshot }}" alt=""/></div>
+			  <div style="width:90%;"><div><b>
+                  {% with total=conversation.users.all.count %}
+	{% if total <= 3 %}
+        {% for user in conversation.users.all %}
+		<a href="{{user.get_absolute_url}}" class="conversationLinks">
+		{% if not forloop.last %}{{ user.username }}, {% else %}{{user.username}}{% endif%}</a>
+		{% endfor %}
+	{% else %}
+	   {% for user in conversation.users.all|slice:":3" %}
+		<a href="{{user.get_absolute_url}}" class="conversationLinks">
+		{% if not forloop.last %}{{ user.username }}, {% else %}{{user.username}}</a><span class="conversationLinks">...and</span>
+		<a href="#" data-toggle="modal" class="conversationLinks" data-target="#userListConv" onclick="fetch_user_list();">{{total|add:"-3"}} more{% endif%}</a>
+	   {% endfor %}
+	 {% endif %}
+	 {% endwith %}
+			  </b>
+                  <a href="javascript:void(0);" class="hiding floatR deleteConvLink colorGrey" data-content="<a href='javascript:void(0);' onclick = 'delete_conv({{conversation.id}},this)' class='deleteItem colorGrey'>Delete</a>">
+                <span class="glyphicon glyphicon-remove colorGrey"></span></a>
+					{% if not request.user in conversation.read_by.all %} <span class="badge floatR messageNotify" style="font-size:9px;"> </span>{% endif %}
+
+				</div>
+				<div>
+				<span id="msgTextNotify{{forloop.counter}}" class="msgTxtNotify">{{ conversation.latest_message.text }}</span>
+				</div>
+				<div>
+				<span class="timestampText">{{ conversation.latest_message_date|naturaltime }}</span>
+				</div>
+				</div>
+
+           </div>
+</div>
+{% endfor %}
+{% show_more %}

@@ -1,0 +1,131 @@
+{% extends 'landing/landing2.html' %}
+{% load static %}
+{% load humanize %}
+{% load phileo_tags %}
+{% load comments %}
+{% block metaData %}
+<meta name="description" content="{% if object.brief %}{{object.brief}}{% else %}HouseofGrads: a GATE network, GATE previous year questions, GATE discussion forum, and blogs related to GATE.{% endif %}"/>
+{% endblock %}
+{% block title %}{{object.name|truncatechars:68}}{% endblock %}
+{% load activity_tags %}
+{% block postArea %}
+<div class=""><input type="hidden" id="tagHidden" value=""/>
+			<div class="profileDetailContainer clearfix">
+				<div class="floatL widthFull" style="margin-left:0;">
+		{% if user.username != object.author.username %}
+			
+			<button id = "followThreadBtn" name="{{object.id}}" {% if user.is_authenticated %}{%else%}onclick="logch(event);"{% endif%} class="{% if user|is_following:object %}btn btn-default floatR{% else %}btn btn-success floatR{% endif %}"><b>{% if user|is_following:object %}Unfollow{% else %}Follow{%endif%}</b></button>
+
+		{% endif %}
+			<span class="profileUsername boldText">{{ object.name}}</span>
+			<div class="clearfix"></div>
+			<span class="colorGrey">GATE-{{ object.stream.name }} forum </span>
+			<span class="marginT colorGrey floatR boldText" id="follow_num">
+			{% if no_followers %}{{ no_followers }} followers{% endif %}</span>
+			<div class="clearfix"></div>
+			<div class="marginT">
+			<input type="hidden" id="descTextVal" value="{% autoescape off %}{{object.brief}}{% endautoescape %}"/>
+			<span id="descText" class="marginT clearfix largeFont"></span>
+			
+			</div>
+		</div>
+		<form class="floatL marginT widthFull" action="/postonthread/" id="postThreadForm" method="post">
+		{% csrf_token %}
+		<div class="postArea">
+		<textarea id="text" class="form-control" name='content' placeholder="Post a question or topic and start discussing...." autofocus="none"></textarea>
+		{{ post_form.author }}
+		{{ post_form.date }}
+		{{ post_form.thread }}
+		<input type="hidden" id="img_url" value=""/>
+		<div class="liveContainer"></div>
+		</div>
+		
+		<div class="postPanel clearfix" style="border-bottom:0;border-right:0;border-left:0;">
+		<div id="file-uploader" class="floatL" style="height:28px;"></div>
+			<div class="checkBox-group">
+			</div>
+			<div class="btn-group btn-group-sm floatR">
+				<button type="submit" id="submitPost" {%if user.is_authenticated %}{% if user.is_active %}{%else%}onclick="actch(event);"{%endif%}{%else%}onclick="logch(event);"{% endif%} class="btn btn-primary"><b>Post</b></button>
+			</div>
+			<img src="{% static 'img/loading.gif' %}" class="loading hiding floatR marginT marginR"/>
+			<span class="glyphicon glyphicon-remove hiding colorGrey floatR pointer" title="close preview"></span>	
+		</div>
+		</form>
+		
+		</div>
+		<div class ="uploadedFilePanel">
+		
+		</div>
+	</div>
+{% endblock %}
+{% block newsFeed %}
+<div id="postFeed">
+    {% include 'posts/post_list.html' %}
+</div>
+{% endblock %}
+{% block js %}
+<script type ="text/javascript" src="{% static 'js/fileuploader.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/urlive2.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript">
+$("#id_author").attr('value','{{user.id}}');
+$('#id_thread').attr('value','{{object.id}}');
+var threadDesc = $("#descTextVal").val();
+$("#descText").html(threadDesc);
+getThreadFeed();
+window.onload = function(){tinyMCEinit(true);}
+var stickyTop = $('#sideMenu').offset().top; // returns number 
+ 
+	$(window).scroll(function(){ // scroll event  
+ 
+    var windowTop = $(window).scrollTop(); // returns number
+ 
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+    }
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+    } 
+  });
+
+
+$('.postPanel .glyphicon-remove').tooltip();
+$('.postPanel .glyphicon-remove').click(function(){
+$('.postArea .urlive-link').fadeOut();
+$(this).hide();
+setTimeout("$('.liveContainer').empty();",300);
+});
+var uploader = new qq.FileUploader( {
+            action: "/upload/image/",
+			allowedExtensions: ['png','jpeg','jpg','gif','ico','bmp'],
+            element: $('#file-uploader')[0],
+			listElement: $('.uploadedFilePanel')[0],
+            multiple: true,
+            onComplete: function( id, fileName, responseJSON ) {
+              if( responseJSON.success )
+              {
+              file_name = fileName + "jPeFhhi"
+              $('.uploadedFilePanel').append('<input type="hidden" value="'+responseJSON.path+'" id="'+file_name+'">')
+			  }else{}},
+            onAllComplete: function( uploads ) {
+            $('#img_url').val('');
+			  for(i=0;i<uploads.length;i++){
+			  $('#img_url').val($('#img_url').val() + ' ' + uploads[i]['response']['path']);
+			  }
+
+			  },
+            params: {
+              'csrf_token': '{{ csrf_token }}',
+              'csrf_name': 'csrfmiddlewaretoken',
+              'csrf_xname': 'X-CSRFToken',
+            },
+          }) ;
+$('.qq-upload-button').tooltip();
+$('#descText').find('img').each(function(){
+var url = $(this).attr('src');
+url = url.substring(2);$(this).attr('src',url);
+});
+</script>
+{% endblock %}

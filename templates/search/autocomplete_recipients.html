@@ -1,0 +1,12 @@
+{% if results_users %}
+<ul class="list-group">
+{% if results_users %}
+<li class="list-group-item searchlisthead"><b><span class="glyphicon glyphicon-user"></span><span style="margin-left:5px;">Users</span></b></li>
+{% for result in results_users %}
+			<li class="list-group-item">
+                    <a href="{{ result.object.get_absolute_url }}"><b>{{ result.object.username }}</b></a>
+              </li>
+{% endfor %}
+{% endif %}
+</ul>
+{% endif%}

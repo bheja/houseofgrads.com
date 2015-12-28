@@ -1,0 +1,108 @@
+{% extends "base/nav.html" %}
+{% load static %}
+{% load comments %}
+{% load activity_tags %}
+{% load url from future %}
+{% block bodyContent %}
+<div class="container" >
+<div class="col-lg-2 " id="sideMenu" style="height:1200px; padding:0;">
+{% if user.is_authenticated %}
+	<div class="list-group bs-sidebar affix-top" style="font-size:13px;">
+		<a href="/home/" id="sp1" class="list-group-item" >My live feed</a>
+		<a href="#"  id="sp2" class="list-group-item" disabled>My recent activity </a>
+		<a href="/following/threads/" id="sp3" class="list-group-item" disabled>Discussions followed</a>
+		<a href="{{user.get_absolute_url}}" id="sp4" class="list-group-item" onclick="panelClick(this,{{user.get_absolute_url}},'4');">My profile</a>
+
+	</div>
+{% endif %}
+</div>
+<div class="col-lg-8" style="height:1000px;">
+	{% block postArea %}
+	<div class="">
+		<div class=""><input type="hidden" id="tagHidden" value=""/></div>
+		<form class="" action="" id="postForm" method="post">
+		{% csrf_token %}
+		
+		<div class="postArea">
+		<textarea id="text" class="form-control" name='content' placeholder="Post a question or topic and start discussing...." spellcheck="false"></textarea>
+		{{ post_form.author }}
+		{{ post_form.date }}
+		{{ post_form.thread }}
+		<input type="hidden" id="img_url" value=""/>
+		<div class="liveContainer"></div>
+		</div>
+		<div class="postPanel clearfix">
+		<div id="file-uploader" class="floatL" style="height:28px;"></div>
+			<div class="btn-group btn-group-sm floatR">
+				
+				<button type="submit" id="submitPost" class="btn btn-primary"><b>Post</b></button>
+			</div>
+			<img src="{% static 'img/loading.gif' %}" class="loading hiding floatR marginT marginR"/>
+			<span class="glyphicon glyphicon-remove hiding colorGrey floatR pointer" title="close preview"></span>	
+		
+		</div>
+		<div class ="uploadedFilePanel">
+		
+		</div>
+		</form>
+	</div>
+	{% endblock %}
+	{% block newsFeed %}
+	<div id="newsFeed" class="newsFeed endless_page_template">
+	
+	</div>
+	{% endblock %}
+</div>
+<div class="col-lg-2" style="height:1000px;">
+<div class="list-group bs-sidebar affix-top">
+	{% if user.is_authenticated %}
+	<button data-toggle="modal" data-target="#createThreadModal" class="btn btn-default btn-thread colorGrey" id="createThreadButton"><b>Create a thread</b></button>
+	<button data-toggle="modal" data-target="#messageCompose" class="btn btn-default btn-thread marginT colorGrey" id="messageComposeButton" ><b>Send a Message</b></button>
+	
+	{% endif %}
+</div>
+</div>
+</div>
+<div id="msgModal" class="modal fade in" tabindex="-1" aria-hidden="true">
+	<div class="modal-content loginModalSizing">
+	 <div class="bgDark">
+	 <button type="button" class="close fontColor" data-dismiss="modal" aria-hidden="true">×</button>
+	 <h4 class="fontColor">Congrats!</h4>
+	 </div>
+	  <div class="modal-body">
+		<div class="alert alert-success largeFont">Email {{viewed_user.email}} has been added to your account. Your account is now activated. All the best!</div>
+	  </div>
+	</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/urlive.js' %}"></script>
+<script type ="text/javascript" src="{% static 'js/fileuploader.js' %}"></script>
+<script type="text/javascript">
+$('#msgModal').modal('show');
+	$('#msgModal').on('hidden.bs.modal', function(e){window.location='/home/'});
+ var uploader = new qq.FileUploader( {
+            action: "/upload/image/",
+            element: $('#file-uploader')[0],
+			listElement: $('.uploadedFilePanel')[0],
+            multiple: true,
+            onComplete: function( id, fileName, responseJSON ) {
+              if( responseJSON.success )
+              {  $.post('/upload/delete/original/',{'filename':fileName,'server':"false"},function(data){$('.alert-link').tooltip();}); 
+			  }else{}},
+            onAllComplete: function( uploads ) {
+			  for(i=0;i<uploads.length;i++){
+			  $('#img_url').val($('#img_url').val() + ' ' + uploads[i]['response']['path']);
+			  }},
+            params: {
+              'csrf_token': '{{ csrf_token }}',
+              'csrf_name': 'csrfmiddlewaretoken',
+              'csrf_xname': 'X-CSRFToken',
+            },
+          }) ;
+$('.qq-upload-button').tooltip();
+
+</script>
+{% endblock %}

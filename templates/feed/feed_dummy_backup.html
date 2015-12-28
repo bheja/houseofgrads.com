@@ -1,0 +1,312 @@
+{% load static %}
+{% load humanize %}
+{% load url from future %}
+{% load activity_tags %}
+{% load phileo_tags %}
+{% load comments %}
+{% load endless %}
+{% lazy_paginate action_list %}
+{% for action in action_list %}
+{% if action.verb|stringformat:"s" != 'created a thread' %}
+	<div class="newsFeedWrapper clearfix" onmouseover="showoptionfeed(this);" onmouseout="hideoptionfeed(this);">
+		<div class="clearfix floatL" style="width:8%;"><a href="{{action.actor.get_absolute_url}}">
+		<img class="mugshotpic" src="{{ action.actor.get_profile.get_mugshot_url }}" alt=""/></a>
+		
+		</div>
+		<div class="newsFeedItem">
+		
+			<a href="{{action.actor.get_absolute_url}}" class="actorUser"><b>{{action.actor}}</b></a>
+			
+		{% if action.action_object %}
+			{% if action.target|stringformat:"s" != "myWall" %}
+			<span class="newsFeedItemText">{{ action.verb }}</span>
+				<a href="{{action.target.get_absolute_url}}"><b>{{ action.target|truncatechars:80 }}</b></a>
+				{% endif %}
+			{% if profile.user %}
+			{% if profile.user.username == user.username %}
+			<a href="#" class="hiding floatR" title="hide this item"><span class="glyphicon glyphicon-remove"></span></a>
+			{% endif %}
+			{% else %}
+			<a href="#" class="hiding floatR" title="hide this item"><span class="glyphicon glyphicon-remove"></span></a>
+			{% endif %}
+			<a href="/postdetail/{{action.action_object.id}}/" target="_blank" class="hiding floatR marginR" title="open this item"><span class="glyphicon glyphicon-plus"></span></a>
+			
+			<div class="clearfix"></div>
+				<span class="timestampText">{{ action.timestamp|naturaltime }}</span><span class="timestampText"> </span>
+		<div class="contentNewsFeed"><span class="feedText">{{action.action_object.content|stringformat:"s"}}</span>{% if action.action_object.previewurl %}<div class="previewContains">{{action.action_object.previewurl|stringformat:"s"}}</div>{% endif %}
+		{% if action.action_object.image.all %}
+		<div class="imagePanel clearfix marginT">
+			{% for img in action.action_object.image.all %}
+			<a href="" class="imageModalLink floatL" onclick="get_image(this)" data-target="#imageModal" data-toggle="modal" ><img src="{{MEDIA_ROOT}}{{img}}" alt="" class="postImage floatL"/></a>
+			{% endfor%}
+		</div>
+		{% endif %}
+		</div>
+		{% else %}
+		<span class="newsFeedItemText">{{ action.verb }}</span>
+			{% if action.target.thread|stringformat:"s" != "myWall" %}
+			<a href="threads/{{action.target.id}}/"><b>{{ action.target.thread }}</b></a>
+			{% endif %}
+			<a href="/postdetail/{{action.target.id}}/" target="_blank" class="hiding floatR marginR" title="open this item"><span class="glyphicon glyphicon-plus"></span></a>
+			<div class="clearfix"></div>
+			<span class="timestampText">{{ action.timestamp|naturaltime }}</span><span class="timestampText"> </span>
+		<div class="contentNewsFeed"><span class="feedText">{{action.target|stringformat:"s"}}</span>{% if action.target.previewurl %}<div class="previewContains">{{action.target.previewurl|stringformat:"s"}}</div>{% endif %}
+		{% if action.target.image.all %}
+			{% for img in action.target.image.all %}
+			<a href="" class="imageModalLink floatL" onclick="get_image(this)" data-target="#imageModal" data-toggle="modal" ><img src="{{MEDIA_ROOT}}{{img}}" alt="" class="postImage floatL"/></a>
+			{% endfor%}
+		{% endif %}
+		
+		</div>
+		{% endif %}
+		</div>
+		<div class="clearfix"></div>
+		 <div class="commentBox" >
+		 	<div class="postStatBox clearfix">
+			{% if action.verb|stringformat:"s" != 'created a thread' %}
+			{% if user.is_authenticated %}
+			{%if action.action_object %}{% phileo_widget user action.action_object %}{% else %}{% phileo_widget user action.target %}{% endif %}
+			{% else %}
+			<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Like">
+			<span class="glyphicon glyphicon-thumbs-up largeFont " title="Like"></span><span class="likeNum">Like</span></a>
+			<a class="btn btn-default smallFont ajax marginL" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);"  onclick="logch(event);" title="share">
+			<span class="glyphicon glyphicon-share-alt largeFont " title="Share"></span><span class="likeNum">Share</span></a>
+			<div class="clearfix"></div>
+			<span class="likeTxt">{%if action.action_object %}{{action.action_object|likes_count}}{% else %}{{action.target|likes_count}}{% endif %} people liked this</span>
+			{% endif %}
+			{% endif %}
+			</div>
+		 
+			{% if action.action_object %}
+				
+				{% get_comment_form for posts.createpost action.action_object.id as comm_form %}
+				{{ comm_form.content_type }}
+				{{ comm_form.object_pk }}
+				{{ comm_form.timestamp }}
+				{{ comm_form.security_hash }}
+				<input type="hidden" value='{{ csrf_token }}'id='id_csrf{{forloop.counter}}' />
+				
+				{% get_comment_count for posts.createpost action.action_object.id as count %}
+				 {% if count = 0 or count = 1 or count = 2 %} 
+						{% get_comment_list for posts.createpost action.action_object.id as comment_list %}
+							<div class="parentCommentList">
+
+							<hr>
+							{% for comment in comment_list %}
+								
+									<div class="commentList clearfix">
+									
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.get_mugshot_url }}" class="commentMugshot"/></a>
+									</div>
+									
+									<div class="commentBody"> 
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt">{{ comment.comment}}</span></span>
+									</div>
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% if user.is_authenticated %}{% phileo_widget_brief request.user comment %}
+										{% else %}
+										<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Good one">
+										<span class="glyphicon glyphicon-circle-arrow-up" style="font-size:12px;" title="Like"><span class="commentLikeCount">{% if comment|likes_count != 0 %}{{comment|likes_count}}{% endif %}</span></span></a>
+										{% endif %}
+									</div>
+									
+									</div>
+								
+							{% endfor %}
+							</div>
+							
+							<div class="commentForm input-group-sm marginT">
+							<textarea id = "id_comment{{forloop.counter}}" class="commentArea form-control noResize" onkeypress="commentPost(this,event)" placeholder="Write a comment..." required></textarea>
+							<input type="hidden" value="0 0" class="tagArray"/>
+							</div>
+							
+				{% else %}
+					
+					<!-- <div class="parentCommentList">
+					</div> -->
+					 {% get_comment_list for posts.createpost action.action_object.id as comment_list %}
+					 <hr>
+							<a href="javascript:void(0)" class="marginT" onclick="getCommentList(this,{{action.action_object.id}})">View previous comments({{count|add:"-2"}})</a>
+							<div class="parentCommentList marginT">
+						
+							{% for comment in comment_list|slice:"-2:"  %}
+									
+									<div class="commentList clearfix">
+									
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.get_mugshot_url }}" class="commentMugshot"/></a>
+									</div>
+									<div class="commentBody"> 
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt">{{ comment.comment}}</span></span>
+									</div>
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% if user.is_authenticated %}{% phileo_widget_brief request.user comment %}
+										{% else %}
+										<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Good one">
+										<span class="glyphicon glyphicon-circle-arrow-up" style="font-size:12px;" title="Like"><span class="commentLikeCount">{% if comment|likes_count != 0 %}{{comment|likes_count}}{% endif %}</span></span></a>
+										{% endif %}
+									</div>
+									
+									</div>
+								
+							{% endfor %}
+							</div>
+					
+					
+					<div class="commentForm input-group-sm marginT">
+					<textarea id = "id_comment{{forloop.counter}}" class="commentArea form-control noResize" onkeypress="commentPost(this,event)" placeholder="Write a comment..." required></textarea>
+					<input type="hidden" value="0 0" class="tagArray"/>
+					</div>
+					
+				{% endif %}
+			{% else %}
+				
+				{% get_comment_form for posts.createpost action.target.id as comm_form %}
+				{{ comm_form.content_type }}
+				{{ comm_form.object_pk }}
+				{{ comm_form.timestamp }}
+				{{ comm_form.security_hash }}
+				<input type="hidden" value='{{ csrf_token }}'id='id_csrf{{forloop.counter}}' />
+				
+				{% get_comment_count for posts.createpost action.target.id as count %}
+				 {% if count = 0 or count = 1 or count = 2 %} 
+						{% get_comment_list for posts.createpost action.target.id as comment_list %}
+							<div class="parentCommentList">
+						
+							<hr>
+							{% for comment in comment_list %}
+			
+									<div class="commentList clearfix">
+									
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.get_mugshot_url }}" class="commentMugshot"/></a>
+									</div>
+									<div class="commentBody"> 
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt">{{ comment.comment}}</span></span>
+									</div>
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% if user.is_authenticated %}{% phileo_widget_brief request.user comment %}
+										{% else %}
+										<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Good one">
+										<span class="glyphicon glyphicon-circle-arrow-up" style="font-size:12px;" title="Like"><span class="commentLikeCount">{% if comment|likes_count != 0 %}{{comment|likes_count}}{% endif %}</span></span></a>
+										{% endif %}
+									</div>
+									
+									</div>
+							{% endfor %}
+							</div>
+							
+							<div class="commentForm input-group-sm marginT">
+							<textarea id = "id_comment{{forloop.counter}}" class="commentArea form-control noResize" onkeypress="commentPost(this,event)" placeholder="Write a comment..." required></textarea>
+							<input type="hidden" id="pkPost{{forloop.counter}}" value="{{comment.id}}" />
+							<input type="hidden" value="0 0" class="tagArray"/>
+							</div>
+							
+				{% else %}
+					
+					<!-- <div class="parentCommentList">
+					</div> -->
+					 {% get_comment_list for posts.createpost action.target.id as comment_list %}
+					 	<hr>
+					 <a href="javascript:void(0)" class="marginT" onclick="getCommentList(this,{{action.data.postid}})">View previous comments({{count|add:"-2"}})</a>
+							<div class="parentCommentList marginT">
+						
+							{% for comment in comment_list|slice:"-2:"  %}
+							
+										<div class="commentList clearfix">
+										
+									<div class="commentUser">
+									<a href="{{comment.user.get_absolute_url}}"><img src="{{ comment.user.get_profile.get_mugshot_url }}" class="commentMugshot"/></a>
+									</div>
+									<div class="commentBody"> 
+										<span><a href="{{comment.user.get_absolute_url}}"><b>{{ comment.user }}</b></a>
+										<span class="commentTxt">{{ comment.comment}}</span></span>
+									</div>
+									<div class="commentTimestamp">
+										<span class="timestampText">{{comment.submit_date|naturaltime}} </span>
+										{% if user.is_authenticated %}{% phileo_widget_brief request.user comment %}
+										{% else %}
+										<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Good one">
+										<span class="glyphicon glyphicon-circle-arrow-up" style="font-size:12px;" title="Like"><span class="commentLikeCount">{% if comment|likes_count != 0 %}{{comment|likes_count}}{% endif %}</span></span></a>
+										{% endif %}
+									</div>
+									
+									</div>
+								
+							{% endfor %}
+							</div>
+					
+					
+					<div class="commentForm input-group-sm marginT">
+					<textarea id = "id_comment{{forloop.counter}}" class="commentArea form-control noResize" onkeypress="commentPost(this,event)" placeholder="Write a comment..." required></textarea>
+					<input type="hidden" value="0 0" class="tagArray"/>
+					</div>
+					
+				
+			{% endif %}
+
+			</div>
+		
+			<script type="text/javascript">
+			var e1 = document.getElementById('id_content_type');
+			var e3 = document.getElementById('id_timestamp'); 
+			var e2 = document.getElementById('id_object_pk'); 
+			var e4 = document.getElementById('id_security_hash');  
+			e1.id = 'id_ctype{{forloop.counter}}';
+			e2.id = 'id_opk{{forloop.counter}}';
+			e3.id = 'id_timestamp{{forloop.counter}}';
+			e4.id = 'id_sh{{forloop.counter}}';
+			</script>
+		</div>
+{% else %}
+<div class="newsFeedWrapper clearfix" onmouseover="showoptionfeed(this);" onmouseout="hideoptionfeed(this);">
+		<div class="clearfix floatL" style="width:8%;"><a href="{{action.actor.get_absolute_url}}"><img class="mugshotpic" src="{{ action.actor.get_profile.get_mugshot_url }}" alt=""/></a></div>
+		<div class="newsFeedItem">
+		
+			<a href="{{action.actor.get_absolute_url}}" class="actorUser"><b>{{action.actor}}</b></a>
+			
+			<span class="newsFeedItemText">{{ action.verb }}</span>
+				<a href="{{action.action_object.get_absolute_url}}"><b>{{ action.action_object.name|truncatechars:80 }}</b></a>
+			{% if profile.user %}
+			{% if profile.user.username == user.username %}
+			<a href="#" class="hiding floatR" title="hide this item"><span class="glyphicon glyphicon-remove"></span></a>
+			{% endif %}
+			{% else %}
+			<a href="#" class="hiding floatR" title="hide this item"><span class="glyphicon glyphicon-remove"></span></a>
+			{% endif %}
+			<a href="/threads/{{action.action_object.id}}/" target="_blank" class="hiding floatR marginR" title="open this item"><span class="glyphicon glyphicon-plus"></span></a>
+			
+			<div class="clearfix"></div>
+				<span class="timestampText clearfix">{{ action.timestamp|naturaltime }}</span><span class="timestampText"> </span>
+		
+		</div>
+		
+		 <div class="commentBox floatR" style="margin-top:10px;margin-left:0;width:90%;">
+		 <div class="contentNewsFeed"><span class="feedText">{{action.action_object.brief|stringformat:"s"}}</span></div>
+		 	<hr>
+			<div class="postStatBox clearfix">
+			{% if user.is_authenticated %}{% phileo_widget user action.action_object %}
+			{% else %}
+			<a class="btn btn-default smallFont ajax" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);" onclick="logch(event);" title="Like">
+			<span class="glyphicon glyphicon-thumbs-up largeFont " title="Like"></span><span class="likeNum">Like</span></a>
+			<a class="btn btn-default smallFont ajax marginL" href="#" onmouseover="showtooltipfeed(this);" onmouseover="hidetooltipfeed(this);"  onclick="logch(event);" title="share">
+			<span class="glyphicon glyphicon-share-alt largeFont " title="Share"></span><span class="likeNum">Share</span></a>
+			<div class="clearfix"></div>
+			<span class="likeTxt">{%if action.action_object %}{{action.action_object|likes_count}}{% else %}{{action.target|likes_count}}{% endif %} people liked this</span>
+			{% endif %}
+			
+			</div>
+		 </div>
+		</div>
+		
+{% endif %}
+	<hr>
+{% endfor %}
+{% show_more %}

@@ -1,0 +1,82 @@
+{% load static %}
+{% load activity_tags %}
+{% load comments %}
+{% for action in action_list %}
+	<div class="newsFeedWrapper clearfix">
+		<img class="mugshotpic" src="{% static 'img/profpic.jpg' %}" alt=""/>
+		<div class="newsFeedItem">
+		<!-- {% if action.actor.get_absolute_url %} -->
+			<a href="#" class=""><b>
+			{% if action.data.fullname|stringformat:"s" != " " %}
+				{{ action.data.fullname }}
+			{% else %}
+				{{action.actor}}
+			{% endif %}
+			</b></a>
+		<!-- {% endif %} -->
+		{% if action.target|stringformat:"s" != "myWall" %}
+		<span class="newsFeedItemText">{{ action.verb }}</span><span class="newsFeedItemText"> on</span>
+		
+			<!-- {% if action.target.get_absolute_url %} -->
+				<a href="#"><b>{{ action.target }}</b></a>
+			<!-- {% else %}
+				<a href="{{ action.target_url }}">{{ action.target }}</a>
+			{% endif %} -->
+		{% endif %}
+			<br/><span class="timestampText">{{ action.timestamp|timesince }}</span><span class="timestampText"> ago</span>
+		<div class="contentNewsFeed"><span id="contentNewsFeedText{{forloop.counter}}">{{action.data.brief|stringformat:"s"}}</span></div>
+		
+		<script type="text/javascript">
+						var a = document.getElementById("contentNewsFeedText{{forloop.counter}}").innerText;
+						document.getElementById("contentNewsFeedText{{forloop.counter}}").innerHTML = a;
+		</script>
+		</div>
+		 <div class="commentList">
+			{% if user.is_authenticated %}
+				{% get_comment_form for posts.createpost action.data.postid as comm_form %}
+				{{ comm_form.content_type }}
+				{{ comm_form.object_pk }}
+				{{ comm_form.timestamp }}
+				{{ comm_form.security_hash }}
+				
+			<div class="commentForm">
+				<textarea class="commentArea" id = "commentArea{{forloop.counter}}" name ='content' required placeholder="Write a comment..."></textarea>
+				<button type="submit" class="commentPost" onclick="commentPost()">Post</button>
+			</div>
+			{% endif %}
+			{% get_comment_list for posts.createpost action.data.postid as comment_list %}
+			{% for comment in comment_list %}
+			<span>{{ comment }}</span>
+			{% endfor %}
+		</div>
+	</div>
+	<script type="text/javascript">
+
+var e1 = document.getElementById('id_content_type');
+var e2 = document.getElementById('id_object_pk'); 
+var e3 = document.getElementById('id_timestamp'); 
+var e4 = document.getElementById('id_security_hash');  
+e1.id = 'id_ctype{{forloop.counter}}';
+e2.id = 'id_opk{{forloop.counter}}';
+e3.id = 'id_timestamp{{forloop.counter}}';
+e4.id = 'id_sh{{forloop.counter}}'; 
+function commentPost(){
+var content_type = document.getElementById('id_ctype{{forloop.counter}}');
+var object_pk = document.getElementById('id_opk{{forloop.counter}}');
+var timestamp = document.getElementById('id_timestamp{{forloop.counter}}');
+var security_hash = document.getElementById('id_sh{{forloop.counter}}');
+var comment = document.getElementById('commentArea{{forloop.counter}}');
+xmlhttp = new XMLHttpRequest();
+var url = "/comments/";
+xmlhttp.open("POST", url, true);
+xmlhttp.onreadystatechange = function () { //Call a function when the state changes.
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        alert(xmlhttp.responseText);
+    }
+}
+var parameters = {'content_type':content_type,'object_pk':object_pk,'timestamp':timestamp,'security_hash':security_hash,'comment':comment,'csrfmiddlewaretoken': '{{ csrf_token }}'};
+xmlhttp.send(parameters);
+}
+	</script>
+	<hr>
+{% endfor %}

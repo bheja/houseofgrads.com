@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+<div class="panel-heading"><p class="largeFont colorGrey" >Title: <b>"{{query}}"</b></p></div>
+    <input type="hidden" id="threadTitleSearch" value="{{query}}">
+    <input type="hidden" id="resultCountThread" value="{{count}}">
+ {% for r in results %}
+ <div class="panel-body">
+                <p class="largeFont marginT threadSearchResult"><a class="colorBlue" href="{{r.object.get_absolute_url}}">{{r.object.name}}</a></p>
+
+
+</div>
+   {% endfor %}
+     <div class="postPanel row clearfix">
+				<div class="btn-group btn-group-sm floatR">
+                <button id="backThreadCreate" class="btn btn-default marginR" onclick="backonthread();"><b>Back</b></button>
+				<button id="newThread" onclick="new_thread();" class="btn btn-primary"><b>It's a new thread</b></button>
+
+				</div>
+				</div>
+</div>

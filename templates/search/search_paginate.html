@@ -1,0 +1,27 @@
+{% load static %}
+{% load highlight %}
+{% load endless %}
+{% paginate results %}
+
+            {% for result in results %}
+				{% if result.object.name %}
+                <div class="panel-body">
+                    <a href="{{ result.object.get_absolute_url }}" class="highlightText searchResultHeading">{{ result.object.name }}</a>
+					<div class="clearfix"></div>
+					<a href="{{ result.object.get_absolute_url }}" >http://houseofgrads.com{{ result.object.get_absolute_url }}</a>
+					<div class="clearfix"></div>
+					<span class="highlightText searchResultContent" id="searchResultText{{forloop.counter}}">{% highlight result.object.brief with query %}</span>
+                </div>
+				{% elif result.object.content  %}
+				<div class="panel-body">
+                    <a href="{{ result.object.thread.get_absolute_url }}" title="go to thread " class="highlightText searchResultHeading">{{ result.object.thread.name }}</a>
+					<div class="clearfix"></div>
+					<a href="{{ result.object.get_absolute_url }}" class="urltooltip" title="go to post" data-placement="right" >http://houseofgrads.com{{ result.object.get_absolute_url }}</a>
+					<div class="clearfix"></div>
+					<span class="highlightText searchResultContent" id="searchResultText{{forloop.counter}}">{% highlight result.object.content with query%}</span>
+                </div>
+				{% endif %}
+            {% empty %}
+                <div class="panel-body">No results found.</div>
+            {% endfor %}
+			{% show_pages %}

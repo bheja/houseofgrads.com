@@ -1,0 +1,93 @@
+{% extends "base/base.html" %}
+{% block bodyContent %}
+<div class="container" >
+<div class="col-lg-2 " id="sideMenu" style="height:1200px; padding:0;">
+	<div class="list-group bs-sidebar affix-top">
+		<a href="#" class="list-group-item active">Live activity feed<span class="badge">3</span></a>
+		<a href="#" class="list-group-item">Recently visited discussions<span class="badge">2</span></a>
+		<a href="#" class="list-group-item">Following Threads</a>
+	</div>
+</div>
+<div class="col-lg-8" style="height:1000px;">
+	<div class="">
+		<div class=""></div>
+		<div class="postArea">
+			<textarea id="text" class="form-control" placeholder="Post a question or topic and start discussing...." autofocus="none"></textarea>
+			
+		</div>
+		<div class="postPanel">
+			<input id="questionCheck" type="checkbox"/><label for="questionCheck" class="normalText">Post it as a question</label>
+			
+		</div>
+	</div>
+</div>
+<div class="col-lg-2" style="height:1000px;">
+</div>
+</div>
+{% endblock %}
+{% block loginPanel %}
+			<ul class="nav navbar-nav navbar-right">
+			<li>				
+			<a href="#">{{ user.username }}<b class="caret"></b></a>			
+			</li>
+			</ul>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+	 var observe;
+if (window.attachEvent) {
+    observe = function (element, event, handler) {
+        element.attachEvent('on'+event, handler);
+    };
+}
+else {
+    observe = function (element, event, handler) {
+        element.addEventListener(event, handler, false);
+    };
+}
+function init () {
+	
+    var text = document.getElementById('text');
+    function resize () {
+        text.style.height = 'auto';
+        text.style.height = text.scrollHeight+'px';
+    }
+    /* 0-timeout to get the already changed text */
+    function delayedResize () {
+        window.setTimeout(resize, 0);
+    }
+    observe(text, 'change',  resize);
+    observe(text, 'cut',     delayedResize);
+    observe(text, 'paste',   delayedResize);
+    observe(text, 'drop',    delayedResize);
+    observe(text, 'keydown', delayedResize);
+
+    text.focus();
+    text.select();
+    resize();
+}
+
+	var stickyTop = $('#sideMenu').offset().top; // returns number 
+ 
+	$(window).scroll(function(){ // scroll event  
+ 
+    var windowTop = $(window).scrollTop(); // returns number
+ 
+    if (stickyTop < windowTop) {
+      $('.affix-top').css('position','fixed');
+	  $('.affix-top').css('top','0px');
+    }
+    else {
+      $('.affix-top').css('position','static');
+	  $('.affix-top').css('top','0');
+    }
+ 
+  });
+ 
+  $(".postArea textarea").bind("focus keydown",function(){
+   $(this).parent().siblings(".postPanel").show();  
+  $(this).parent().css("border-bottom","0");
+  });
+ 
+</script>
+{% endblock %}
